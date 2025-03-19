@@ -1,0 +1,16 @@
+.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input,
+.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
+    height: 14px !important;
+}
+
+.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
+    padding: 11.5px 14px !important;
+}
+
+.MuiTableCell-root,
+.css-wsew38,
+.css-zrlv9q,
+.css-10gei56 {
+
+    background-color: rgb(234, 235, 236) !important;
+}

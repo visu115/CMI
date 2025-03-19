@@ -1,0 +1,26 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+.css-1rwt2y5-MuiButtonBase-root-MuiButton-root {
+  /* color: white !important; */
+  border: 0.5px solid white !important;
+}
+/* .css-bhp9pd-MuiPaper-root-MuiCard-root,
+.css-zwt9xa-MuiPaper-root-MuiCard-root {
+  background-color: rgb(234, 235, 236) !important;
+} */
+/* .MuiPaper-root-MuiCard-root{
+
+  background-color: rgb(234, 235, 236) !important;
+
+} */

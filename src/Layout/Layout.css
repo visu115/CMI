@@ -1,0 +1,26 @@
+.sidemenu_drawer.css-3lrix-MuiDrawer-docked .MuiDrawer-paper,
+.sidemenu_drawer .css-h4y409-MuiList-root 
+{
+    background-color: #2F539B !important;
+    color: white;
+
+}
+
+.menuitems_list .css-16ac5r2-MuiButtonBase-root-MuiListItemButton-root:hover {
+    color: white;
+    background-color: #6682ba !important;
+
+}
+@keyframes blink {
+    0% {opacity: 1;}
+    50% {opacity: 0;}
+    100%{opacity: 1;}
+}
+
+@keyframes fadeBlink {
+  0% { opacity: 2; }
+  25% { opacity: 0.8; }
+  50% { opacity: 5; }
+  750% { opacity: 8; }
+  100% { opacity: 1; }
+}
