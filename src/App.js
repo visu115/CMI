@@ -29,7 +29,6 @@ function App() {
   const [alt, setalt] = useState({ open: false, data: "" });
   const [user, setUser] = useState({});
   const [login, setlogin] = useState(sessionStorage.getItem("user") || sessionStorage.getItem("admin") ? true : false)
-  const [admin, setAdmin] = useState(sessionStorage.getItem("admin") ? true : false)
   const [testingData, setTestingData] = useState({ ...(sessionStorage.getItem("cmi_data") ? JSON.parse(sessionStorage.getItem("cmi_data")) : "{}") })
   const [checkStatus, setCheckStatus] = useState({});
   const [messages, setMessages] = useState('');
@@ -102,7 +101,7 @@ function App() {
 
   // console.log(testingData);
   useEffect(() => {
-    if (login||admin) {
+    if (login ) {
 
 
       const ss = io('http://localhost:5001')
@@ -473,7 +472,7 @@ function App() {
     } else {
       setsocket()
     }
-  }, [login, admin]);
+  }, [login]);
 
 
   // var user_name ='';

@@ -34,9 +34,9 @@ const User_dashboard = () => {
     const user = JSON.parse(userString);
 
     // Access the user_name property
-    const userName = user.user_name;  // or user['user_name']
+    const userName = user?.user_name;  // or user['user_name']
     //console.log(userName);  // Output the userName
-
+const rights=user?.rights
 
     const fetchData = async () => {
         try {
@@ -115,14 +115,6 @@ const User_dashboard = () => {
                 <CardContent>
                     <Grid container spacing={2} columnSpacing={13}>
                         <Grid item xl={2} lg={2} xs={12}>
-                            <Typography className='label'>Date</Typography>
-                        </Grid>
-                        <Grid item xl={4} lg={4} sm={12} xs={12}>
-                            <FormControl fullWidth>
-                                <TextField variant='outlined' value={formattedDate} />
-                            </FormControl>
-                        </Grid>
-                        <Grid item xl={2} lg={2} xs={12}>
                             <Typography>Name</Typography>
                         </Grid>
                         <Grid item xl={4} lg={4} sm={12} xs={12}>
@@ -131,6 +123,23 @@ const User_dashboard = () => {
                             </FormControl>
                         </Grid>
                         <Grid item xl={2} lg={2} xs={12}>
+                            <Typography>Rights</Typography>
+                        </Grid>
+                        <Grid item xl={4} lg={4} sm={12} xs={12}>
+                            <FormControl fullWidth>
+                                <TextField variant='outlined' value={rights} />
+                            </FormControl>
+                        </Grid>
+                        <Grid item xl={2} lg={2} xs={12}>
+                            <Typography className='label'>Date</Typography>
+                        </Grid>
+                        <Grid item xl={4} lg={4} sm={12} xs={12}>
+                            <FormControl fullWidth>
+                                <TextField variant='outlined' value={formattedDate} />
+                            </FormControl>
+                        </Grid>
+                       
+                        <Grid item xl={2} lg={2} xs={12}>
                             <Typography>Time</Typography>
                         </Grid>
                         <Grid item xl={4} lg={4} sm={12} xs={12}>
@@ -138,30 +147,30 @@ const User_dashboard = () => {
                                 <TextField variant='outlined' value={formattedTime} />
                             </FormControl>
                         </Grid>
-                        <Grid item xl={2} lg={2} xs={12}>
+                        {/* <Grid item xl={2} lg={2} xs={12}>
                             <Typography>User ID</Typography>
                         </Grid>
                         <Grid item xl={4} lg={4} sm={12} xs={12}>
                             <FormControl fullWidth>
                                 <TextField variant='outlined' value={user.identification_no} />
                             </FormControl>
-                        </Grid>
-                        <Grid item xl={2} lg={2} xs={12}>
+                        </Grid> */}
+                        {/* <Grid item xl={2} lg={2} xs={12}>
                             <Typography>Machine</Typography>
                         </Grid>
                         <Grid item xl={4} lg={4} sm={12} xs={12}>
                             <FormControl fullWidth>
                                 <TextField variant='outlined' />
                             </FormControl>
-                        </Grid>
-                        <Grid item xl={2} lg={2} xs={12}>
+                        </Grid> */}
+                        {/* <Grid item xl={2} lg={2} xs={12}>
                             <Typography>Security Level</Typography>
                         </Grid>
                         <Grid item xl={4} lg={4} sm={12} xs={12}>
                             <FormControl fullWidth>
                                 <TextField variant='outlined' />
                             </FormControl>
-                        </Grid>
+                        </Grid> */}
                     </Grid>
                     <Grid container spacing={3} marginTop={'1%'} justifyContent={'end'}>
                         {/* <Grid item >

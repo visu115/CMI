@@ -136,19 +136,25 @@ export default function UserAdminLogin() {
     const navigate = useNavigate();
     const handleSubmitAdmin = async () => {
         const payload = {
-            user_name: formData?.user_name,
-            password: formData?.password
+            user_name: formData?.user_name.trim(),
+            password: formData?.password.trim()
         }
         try {
-            await server.post('/admin_register', payload)
+            await server.post('/login_check', payload)
                 .then((res) => {
                     console.log(res)
-                    if (res.data.access === 'admin') {
-                        sessionStorage.setItem('admin', JSON.stringify(res.data));
+                    if (res.data.data.rights === 'Maintenance' && res.data.status === 'ok') {
+                        sessionStorage.setItem('user', JSON.stringify(res.data.data));
+                        navigate('/register');
+                        setMode(res.data.data.rights)
+                    }
+                    else if (res.data.data.rights === 'Operator' && res.data.status === 'ok') {
+                        sessionStorage.setItem('user', JSON.stringify(res.data.data));
+                        navigate('/user_dashboard');
                     }
                     setlogin(true);
                     setUser(res.data);
-                    navigate('/register');
+
                     setErrorMessage()
                 })
                 .catch((err) => {
@@ -171,10 +177,10 @@ export default function UserAdminLogin() {
                     <CardContent>
                         <Box display="flex" flexDirection="column" alignItems="center">
                             <Avatar sx={{ mb: 2 }} />
-                            <Typography variant="h6">{mode === "admin" ? "Admin Login" : mode === "user" ? "Ready to Scan" : "Select Mode"}</Typography>
+                            <Typography variant="h6">Login</Typography>
                         </Box>
 
-                        {!mode && (
+                        {/* {!mode && (
                             <Grid container spacing={2} justifyContent="center" marginTop={2}>
                                 <Grid item>
                                     <Button variant="contained" onClick={() => setMode("user")}>User</Button>
@@ -183,7 +189,7 @@ export default function UserAdminLogin() {
                                     <Button variant="contained" color="secondary" onClick={() => setMode("admin")}>Admin</Button>
                                 </Grid>
                             </Grid>
-                        )}
+                        )} */}
 
                         {mode === "user" && (
                             <Grid container justifyContent="center" spacing={2} marginTop={2}>
@@ -196,48 +202,48 @@ export default function UserAdminLogin() {
                             </Grid>
                         )}
 
-                        {mode === "admin" && (
-                            <Grid container spacing={2} marginTop={2}>
+                        {/* {mode === "admin" && ( */}
+                        <Grid container spacing={2} marginTop={2}>
+                            <Grid item xs={12}>
+                                <FormControl fullWidth>
+                                    <TextField
+                                        label="Username"
+                                        variant="outlined"
+                                        name="user_name"
+                                        value={formData.user_name}
+                                        onChange={handleChange}
+                                    />
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormControl fullWidth>
+                                    <TextField
+                                        label="Password"
+                                        variant="outlined"
+                                        type="password"
+                                        name="password"
+                                        value={formData.password}
+                                        onChange={handleChange}
+                                    />
+                                </FormControl>
+                            </Grid>
+                            {errorMessage && (
                                 <Grid item xs={12}>
-                                    <FormControl fullWidth>
-                                        <TextField
-                                            label="Username"
-                                            variant="outlined"
-                                            name="user_name"
-                                            value={formData.user_name}
-                                            onChange={handleChange}
-                                        />
-                                    </FormControl>
+                                    <Typography color="error">{errorMessage}</Typography>
                                 </Grid>
-                                <Grid item xs={12}>
-                                    <FormControl fullWidth>
-                                        <TextField
-                                            label="Password"
-                                            variant="outlined"
-                                            type="password"
-                                            name="password"
-                                            value={formData.password}
-                                            onChange={handleChange}
-                                        />
-                                    </FormControl>
-                                </Grid>
-                                {errorMessage && (
-                                    <Grid item xs={12}>
-                                        <Typography color="error">{errorMessage}</Typography>
+                            )}
+                            <Grid item xs={12}>
+                                <Grid container spacing={2} justifyContent="end">
+                                    <Grid item>
+                                        <Button variant="contained" onClick={handleSubmitAdmin} >Submit</Button>
                                     </Grid>
-                                )}
-                                <Grid item xs={12}>
-                                    <Grid container spacing={2} justifyContent="end">
-                                        <Grid item>
-                                            <Button variant="contained" onClick={handleSubmitAdmin} >Submit</Button>
-                                        </Grid>
-                                        <Grid item>
-                                            <Button variant="contained" color="error" onClick={() => setMode(null)}>Cancel</Button>
-                                        </Grid>
-                                    </Grid>
+                                    {/* <Grid item>
+                                        <Button variant="contained" color="error" onClick={() => setMode(null)}>Cancel</Button>
+                                    </Grid> */}
                                 </Grid>
                             </Grid>
-                        )}
+                        </Grid>
+                        {/* )} */}
                     </CardContent>
                 </Card>
             </Grid>

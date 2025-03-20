@@ -88,12 +88,14 @@ export default function Nav() {
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
 
     // console.log("DB", alt.data);
-    const admin_ses = sessionStorage.getItem('admin');
+    const admin_ses = sessionStorage.getItem('user');
     //setLoading(true);
     const admin = JSON.parse(admin_ses);
+    console.log('Ses Data', admin);
 
     // Access the user_name property
-    const admin_access = admin?.access;
+    const admin_access = admin?.rights;
+    console.log('admin_access', admin_access);
 
     // console.log("USER",user);
 
@@ -140,7 +142,7 @@ export default function Nav() {
     const Admin_route = [
         { name: 'Registration', path: '/register', icon: <HowToRegIcon /> },
     ]
-    const routes = admin_access === 'admin' ? Admin_route : user_routes
+    const routes = admin_access === 'Maintenance' ? Admin_route : user_routes
     return (
         <Box sx={{ display: 'flex' }}>
 
