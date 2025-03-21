@@ -1,6 +1,7 @@
+/* eslint-disable react/jsx-pascal-case */
 import './App.css';
 import './Pages/Pages.css'
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, Navigate } from 'react-router-dom';
 import Nav from './Layout/Layout';
 import User_dashboard from './Pages/User_dashboard';
 import Sweing from './Pages/Sweing';
@@ -22,9 +23,11 @@ import { styled } from '@mui/material/styles';
 import { useRef } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import server from './server/server.js';
+import Ready_scan from './Pages/ready_scan.js';
 
 export const commondata = createContext()
 function App() {
+
   const [socket, setsocket] = useState(null);
   const [alt, setalt] = useState({ open: false, data: "" });
   const [user, setUser] = useState({});
@@ -34,6 +37,7 @@ function App() {
   const [messages, setMessages] = useState('');
   const [currentMessageIndex, setCurrentMessageIndex] = useState(() => () => { });
   //const [alram_add, setAlram_add] = useState([]);
+  console.log('');
 
   // alert messsage dialog box functionality
   const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -101,7 +105,7 @@ function App() {
 
   // console.log(testingData);
   useEffect(() => {
-    if (login ) {
+    if (login) {
 
 
       const ss = io('http://localhost:5001')
@@ -200,8 +204,7 @@ function App() {
 
 
         if (Array.isArray(CheckData_61)) {
-          // Log the first value of the array
-          // console.log("Test",CheckData); // Output: true (assuming the first element is true)
+
 
           check_object_data.LabelScanRead = CheckData_61[0];
           check_object_data.CodeRead2Error = CheckData_61[1];
@@ -224,8 +227,7 @@ function App() {
         const CheckData_62 = data['H62.0'];
 
         if (Array.isArray(CheckData_62)) {
-          // Log the first value of the array
-          // console.log("Test",CheckData); // Output: true (assuming the first element is true)
+
 
           check_object_data.SewMachReadErr = CheckData_62[0];
           check_object_data.SewMachWriteErr = CheckData_62[1];
@@ -243,9 +245,6 @@ function App() {
         }
 
 
-        // useEffect(() => {
-        //   setOpen(true); // Automatically open the dialog when the component mounts
-        // }, []);
         var userString = sessionStorage.getItem('user');
         var user = JSON.parse(userString);
 
@@ -286,9 +285,7 @@ function App() {
             newMessages.push("User Not Logged");
             maintain_alarm["User Not Logged"] = true
           }
-          //if (check_object_data.Sec1) newMessages.push("Section 1 Stitches Not Matched");
-          //if (check_object_data.Sec2) newMessages.push("Section 2 Stitches Not Matched");
-          //if (check_object_data.Sec3) newMessages.push("Section 3 Stitches Not Matched");
+
           if (check_object_data.HandScanComTri && !maintain_alarm["Hand Scaner Communication error"]) {
             newMessages.push("Hand Scaner Communication error");
             maintain_alarm["Hand Scaner Communication error"] = true
@@ -386,15 +383,6 @@ function App() {
 
 
 
-          // console.log("newMessages",newMessages);
-
-          //if(newMessages[0]){
-          //let new_messages = [...new Set(newMessages)]
-
-
-
-
-
 
 
           let index = 0;
@@ -417,8 +405,6 @@ function App() {
             }); console.log("updated");
           }
 
-          //   index = (index + 1) % newMessages.length; // Cycle through messages
-          // }, 2000); // Change message every second
 
 
 
@@ -461,8 +447,6 @@ function App() {
         setTimeout(() => {
           setalt({ open: false, data: "" })
         }, 3000);
-        //  setTestingData((p)=>({...p,...data}));
-        //  sessionStorage.setItem("cmi_data",JSON.stringify({...(sessionStorage.getItem("cmi_data")?JSON.parse(sessionStorage.getItem("cmi_data")):"{}"),...data}))
       });
       return () => {
         ss.off('FromAPI',);
@@ -473,34 +457,32 @@ function App() {
       setsocket()
     }
   }, [login]);
+  const [rights, setRights] = useState(null)
+  // console.log(rights);
 
+  useEffect(() => {
+    const userString = sessionStorage.getItem('user');
 
-  // var user_name ='';
-  // var user_name = user.user_name;
-  //console.log("User Login",user.user_name);
+    const user = JSON.parse(userString);
 
-  // useEffect(() => {
+    if (user) {
+      setRights(user?.rights)
+    }
+    // const rights = user?.rights
+  })
 
-
-
-
-
-  // }, [ArticalCheck, Label1, CodeRead2, CodeRead3, CodeRead4, CodeRead5, Label2, UserNotLog, Sec1, Sec2, Sec3,
-  //   HandScanComTri, LabelScan, CodeReadTri2, CodeReadTri3, CodeReadTri4, LabelScanRead, CodeRead2Error,
-  //   CodeRead3Error, CodeRead4Error, CodeRead5Error, SewMach1, SewMach2, SewMachWriteSend, SewMachRes,
-  //   PrintDisContect1, PrintDisContect2, CodeReadTrig, SewMachReadErr, SewMachWriteErr, SewComReadErr,
-  //   SewComWriteErr, PLCComErr1, PLCComErr2]);
-  //console.log(ArticalCheck);
-
-
+  const ProtectedLayout = ({ children }) => (
+    <div style={{ display: "flex" }}>
+      <Nav /> {/* Sidebar on all authenticated pages */}
+      <div style={{ flexGrow: 1, padding: "16px" }}>{children}</div>
+    </div>
+  );
 
   return (
     <commondata.Provider value={{ setTestingData, socket, login, setlogin, user, setUser, setsocket, testingData, setCheckStatus, checkStatus, alt, setalt }}>
       <div className="App">
 
-        {/* {alt.open && <Dialog open={false} fullWidth>
-          <DialogTitle><Alert severity='info'><h1>{alt.data}</h1></Alert></DialogTitle>
-        </Dialog>} */}
+
 
 
         {open && (<Box sx={{ width: 1 }} className="QtnMaster">
@@ -511,9 +493,7 @@ function App() {
             <Dialog
               open={open}
               onClose={handleClose}
-              // scroll={"paper"}
-              // aria-labelledby="scroll-dialog-title"
-              // aria-describedby="scroll-dialog-description"
+
               maxWidth={'xl'}
               minWidth={'xl'}
               className='DialogContentmodel1'
@@ -554,27 +534,61 @@ function App() {
 
 
 
+        {/* 
+        <BrowserRouter>
+          <Routes>
+            <Route index element={login && rights === 'Operator' ? <Ready_scan /> : login && rights === 'Maintenance' ? <h1>Already Logged Go Back Maintenance</h1> : <LoginForm />}></Route>
+            <Route path='/' element={login ? <Nav /> : <Link to={"/"}>Go login to Login</Link>}>
+              <Route path='/ready_scan' element={login ? <Ready_scan /> : <Link to={"/"}>Go to Login</Link>} />
+              <Route path='/user_dashboard' element={login ? <User_dashboard /> : <Link to={"/"}>Go to Login</Link>} />
+              <Route path='/sweing' element={login ? <Sweing /> : <Link to={"/"}>Go to Login</Link>} />
+              <Route path='/register' element={login && rights === 'Maintenance' ? <UserRegistration /> : <Link to={"/"}>Go to Login</Link>} />
+              <Route path='/checkScanner' element={login ? <CheckScanner /> : <Link to={"/"}>Go to Login</Link>} />
+              <Route path='/alram_table' element={login ? <Alram_Database /> : <Link to={"/"}>Go to Login</Link>} />
+              <Route path='/barcode_scanner' element={login ? <Barcode_scanner /> : <Link to={"/"}>Go to Login</Link>}></Route>
+            </Route>
+          </Routes>
+        </BrowserRouter> */}
 
         <BrowserRouter>
           <Routes>
-            <Route index element={!login ? <LoginForm /> : <h1>Already Logged Go Back</h1>}></Route>
-            <Route path='/' element={login ? <Nav /> : <Link to={"/"}>Go login to Login</Link>}>
+            <Route
+              index
+              element={
+                login && rights === "Operator" ? (
+                  <Ready_scan />
+                ) : login && rights === "Maintenance" ? (
+                  <UserRegistration />
+                ) : (!login && !rights) ? (
+                  <LoginForm />
+                ) : (
+                  <LoginForm />)
+              }
+            />
 
-              <Route path='/user_dashboard' element={login ? <User_dashboard /> : <Link to={"/"}>Go sdgjbjsdfbgjto Login</Link>} />
-              <Route path='/sweing' element={login ? <Sweing /> : <Link to={"/"}>Go to Login</Link>} />
-              <Route path='/register' element={login ? <UserRegistration /> : <Link to={"/"}>Go to Login</Link>} />
-              <Route path='/registerTable' element={login ? <UserRegistrationTable /> : <Link to={"/"}>Go 55445454to Login</Link>} />
-              {/* <Route path='/login' element={<LoginForm />}/> */}
-              <Route path='/checkScanner' element={login ? <CheckScanner /> : <Link to={"/"}>Go to Login</Link>} />
-              <Route path='/threadDatabase' element={login ? <Thread_Database /> : <Link to={"/"}>Go to Login</Link>} />
-              <Route path='/viewcoilDatabase' element={login ? <View_Coil_Database /> : <Link to={"/"}>Go to Login</Link>} />
-              <Route path='/alram_table' element={login ? <Alram_Database /> : <Link to={"/"}>Go to Login</Link>} />
-              <Route path='/seamPattern' element={login ? <Seam_Pattern /> : <Link to={"/"}>Go to Login</Link>} />
-              <Route path='/barcode_scanner' element={login ? <Barcode_scanner /> : <Link to={"/"}>Go to Login</Link>}></Route>
-              <Route path='/tt_graphic' element={login ? <TT_Graphic /> : <Link to={"/"}>Go to Login</Link>}></Route>
-            </Route>
+            {login ? (
+              <>
+                <Route path="/" element={<Nav />} >
+                  <Route path="/ready_scan" element={<Ready_scan />} />
+                  <Route path="/user_dashboard" element={<User_dashboard />} />
+                  <Route path="/sweing" element={<Sweing />} />
+                  <Route path="/register" element={<UserRegistration />} />
+                  <Route path="/checkScanner" element={<CheckScanner />} />
+                  <Route path="/alram_table" element={<Alram_Database />} />
+                  <Route path="/barcode_scanner" element={<Barcode_scanner />} />
+                </Route>
+              </>
+            ) : (
+              <>
+                <Route path="*" element={<Navigate to="/" />} />
+              </>
+            )}
           </Routes>
         </BrowserRouter>
+
+
+
+
       </div></commondata.Provider>
   );
 }

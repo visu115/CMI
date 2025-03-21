@@ -119,17 +119,20 @@
 
 
 
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Grid, Card, CardContent, Box, Typography, Avatar, TextField, FormControl, Button } from "@mui/material";
 import server from "../server/server";
 import { commondata } from '../App';
 import { useNavigate } from "react-router-dom";
 
 export default function UserAdminLogin() {
+
+    // const checkArticledata = '1234';
     const [mode, setMode] = useState(null);
+    const [test, setTest] = useState(null);
     const [formData, setFormData] = useState({ user_name: "", password: "" });
     const [errorMessage, setErrorMessage] = useState("");
-    const { setlogin, setUser } = useContext(commondata)
+    const { setlogin, setUser, setArticleCodeStatus } = useContext(commondata)
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -142,6 +145,7 @@ export default function UserAdminLogin() {
         try {
             await server.post('/login_check', payload)
                 .then((res) => {
+                    setErrorMessage()
                     console.log(res)
                     if (res.data.data.rights === 'Maintenance' && res.data.status === 'ok') {
                         sessionStorage.setItem('user', JSON.stringify(res.data.data));
@@ -150,12 +154,17 @@ export default function UserAdminLogin() {
                     }
                     else if (res.data.data.rights === 'Operator' && res.data.status === 'ok') {
                         sessionStorage.setItem('user', JSON.stringify(res.data.data));
-                        navigate('/user_dashboard');
-                    }
-                    setlogin(true);
-                    setUser(res.data);
+                        // navigate('/ready_scan');
 
-                    setErrorMessage()
+                        setMode(res.data.data.rights)
+
+
+                    }
+
+                    console.log(formData);
+                    setlogin(true);
+                    setFormData({ user_name: "", password: "" });
+                    setUser(res.data);
                 })
                 .catch((err) => {
                     // Set error message for invalid login
@@ -170,6 +179,7 @@ export default function UserAdminLogin() {
             setErrorMessage('Something went wrong, please try again later.'); // Generic error message
         }
     }
+
     return (
         <Grid container justifyContent="center" alignItems="center" style={{ minHeight: "85vh" }}>
             <Grid item xl={3} lg={4} md={6} sm={8} xs={10}>
@@ -191,7 +201,7 @@ export default function UserAdminLogin() {
                             </Grid>
                         )} */}
 
-                        {mode === "user" && (
+                        {mode === "Operator" && (
                             <Grid container justifyContent="center" spacing={2} marginTop={2}>
                                 <Grid item>
                                     <Button variant="contained">Ready to scan</Button>
@@ -221,6 +231,7 @@ export default function UserAdminLogin() {
                                         label="Password"
                                         variant="outlined"
                                         type="password"
+                                        autoComplete="new-password"
                                         name="password"
                                         value={formData.password}
                                         onChange={handleChange}
@@ -237,6 +248,7 @@ export default function UserAdminLogin() {
                                     <Grid item>
                                         <Button variant="contained" onClick={handleSubmitAdmin} >Submit</Button>
                                     </Grid>
+
                                     {/* <Grid item>
                                         <Button variant="contained" color="error" onClick={() => setMode(null)}>Cancel</Button>
                                     </Grid> */}

@@ -35,6 +35,7 @@ const UserRegistration = () => {
 
     const [values, SetValues] = useState({});
 
+    const navigate = useNavigate();
 
     const [selectedValue, setSelectedValue] = useState('');
 
@@ -65,26 +66,34 @@ const UserRegistration = () => {
 
     }
 
-    const columns = [
+    const Articlecolumns = [
+        // {
+        //     accessorKey: 'user_name',
+        //     header: 'User Name',
+        // },
+        // {
+        //     accessorKey: 'personal_id',
+        //     header: 'Personnel ID',
+        // },
+        // {
+        //     accessorKey: 'rights',
+        //     header: 'Access Level',
+        // },
+        // {
+        //     accessorKey: 'time',
+        //     header: 'Last Login at',
+        // },
+        // {
+        //     accessorKey: 'lastLogoutAt',
+        //     header: 'Last Logout at',
+        // },
         {
-            accessorKey: 'user_name',
-            header: 'User Name',
+            accessorKey: 'program_no',
+            header: 'Program No',
         },
         {
-            accessorKey: 'personal_id',
-            header: 'Personnel ID',
-        },
-        {
-            accessorKey: 'rights',
-            header: 'Access Level',
-        },
-        {
-            accessorKey: 'time',
-            header: 'Last Login at',
-        },
-        {
-            accessorKey: 'lastLogoutAt',
-            header: 'Last Logout at',
+            accessorKey: 'seam_name',
+            header: 'Seam No',
         },
         {
             header: 'Action',
@@ -138,7 +147,8 @@ const UserRegistration = () => {
         [globalTheme],
     );
 
-    const [data, setData] = useState([]);
+    const [articledata, setArticleData] = useState([]);
+    const [userData, setUserData] = useState([]);
 
     const handleChange = (e) => {
         //console.log( e.target.value);
@@ -147,7 +157,6 @@ const UserRegistration = () => {
         values[name] = value;
         SetValues(() => ({ ...values }))
     };
-    const navigate = useNavigate();
 
     const handlesubmit = async (e) => {
         e.preventDefault();
@@ -156,7 +165,9 @@ const UserRegistration = () => {
             console.log(values);
             const res = await server.post('/register', values);
             console.log(res.data);
-            navigate('/user_dashboard');
+            SetValues({})
+            setShowForm(false)
+            getArcticleData();
         } catch (error) {
             console.error(error);
         }
@@ -198,7 +209,10 @@ const UserRegistration = () => {
                 if (res.data.updatedUser.user_name == userName) {
                     sessionStorage.setItem('user', JSON.stringify(res.data.updatedUser));
                 }
-                navigate('/user_dashboard');
+                SetValues({})
+                getArcticleData();
+
+                setShowForm(false)
             } else {
                 console.log("Update failed");
             }
@@ -211,20 +225,21 @@ const UserRegistration = () => {
 
 
     useEffect(() => {
-        fetchData();
+        getArcticleData();
+        getUserData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
 
 
 
-    const fetchData = async () => {
+    const getArcticleData = async () => {
         try {
             //setLoading(true);
-            const response = await server.get('/allUsers');
+            const response = await server.get('/getArticleList');
             // await server.get("/companydata", { ...data }).then((res)
             console.log("Table Data", response.data);
-            setData(response.data); // Correct the property to access response data
+            setArticleData(response.data); // Correct the property to access response data
             //setLoading(false);
         } catch (error) {
             console.error('There was an error fetching the data!', error);
@@ -232,29 +247,108 @@ const UserRegistration = () => {
         }
     };
 
+    const getUserData = async () => {
+        try {
+            //setLoading(true);
+            const response = await server.get('/getAllUsers');
+            // await server.get("/companydata", { ...data }).then((res)
+            console.log("Table Data", response.data);
+            setUserData(response.data); // Correct the property to access response data
+            //setLoading(false);
+        } catch (error) {
+            console.error('There was an error fetching the data!', error);
+            //setLoading(false); 
+        }
+    };
 
-    const [userName, setUserName] = useState("");
-    const [password, setPassword] = useState("");
-    const [rights, setRights] = useState("");
+    const [formData, setFormData] = useState({
+        user_name: "",
+        rights: "",
+        password: ""
+    });
+
+    const handleuserchange = (e) => {
+
+        setFormData({ ...formData, [e.target.name?.toLocaleLowerCase()]: e.target.value });
+    };
 
     const handleUserSubmit = async () => {
-        if (!userName || !password || !rights) {
+        if (!formData.user_name || !formData.password || !formData.rights) {
             alert("Please fill all fields.");
             return;
         }
         const payload = {
-            username: userName,
-            password: password,
-            rights: rights
+            username: formData.user_name,
+            password: formData.password,
+            rights: formData.rights
         }
         try {
             const response = await server.post("/New_user_register", payload);
             console.log("Response:", response.data);
             setshowUserForm(false)
+            setFormData({ user_name: '', password: '', rights: '' })
+            getUserData();
         } catch (error) {
             console.error("Error submitting user:", error);
             alert("Failed to submit user.");
         }
+    };
+    const handlecancel = () => {
+        setshowUserForm(false)
+        setShowForm(false)
+        setFormData({ user_name: '', password: '', rights: '' })
+        SetValues({})
+    }
+
+    const UsersTable = ({ data }) => {
+        const UserColumns = [
+            { accessorKey: "user_name", header: "User Name" },
+            { accessorKey: "rights", header: "Access Level" },
+        ];
+
+        return (
+            <Card>
+                <CardContent>
+                    <Typography variant="h6" gutterBottom>
+                        Users Table
+                    </Typography>
+                    <MaterialReactTable columns={UserColumns} data={data} />
+                </CardContent>
+            </Card>
+        );
+    };
+
+    const ArticlesTable = ({ data }) => {
+        const Articlecolumns = [
+            { accessorKey: "program_no", header: "Program No" },
+            { accessorKey: "seam_name", header: "Seam No" },
+            { accessorKey: "article_code", header: "Article Code" },
+
+            {
+                header: "Action",
+                accessorKey: "action",
+                Cell: ({ row }) => (
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handleEdit(row.original)}
+                    >
+                        Edit
+                    </Button>
+                ),
+            },
+        ];
+
+        return (
+            <Card sx={{ marginBottom: 2 }}>
+                <CardContent>
+                    <Typography variant="h6" gutterBottom>
+                        Article Table
+                    </Typography>
+                    <MaterialReactTable columns={Articlecolumns} data={data} />
+                </CardContent>
+            </Card>
+        );
     };
     return (
         <div>
@@ -276,8 +370,8 @@ const UserRegistration = () => {
                                         <TextField
                                             variant="outlined"
                                             name="user_name"
-                                            value={userName}
-                                            onChange={(e) => setUserName(e.target.value)}
+                                            value={formData.user_name}
+                                            onChange={handleuserchange}
                                             placeholder="Enter username"
                                             sx={{ backgroundColor: "#f9f9f9", borderRadius: "8px" }}
                                         />
@@ -293,9 +387,10 @@ const UserRegistration = () => {
                                         <TextField
                                             variant="outlined"
                                             type="password"
-                                            name="password"
-                                            value={password}
-                                            onChange={(e) => setPassword(e.target.value)}
+                                            autoComplete='new-password'
+                                            name="Password"
+                                            value={formData.password}
+                                            onChange={handleuserchange}
                                             placeholder="Enter password"
                                             sx={{ backgroundColor: "#f9f9f9", borderRadius: "8px" }}
                                         />
@@ -309,8 +404,9 @@ const UserRegistration = () => {
                                     </Typography>
                                     <FormControl fullWidth>
                                         <Select
-                                            value={rights}
-                                            onChange={(e) => setRights(e.target.value)}
+                                            value={formData.rights}
+                                            name='rights'
+                                            onChange={handleuserchange}
                                             displayEmpty
                                             sx={{ backgroundColor: "#f9f9f9", borderRadius: "8px" }}
                                         >
@@ -322,15 +418,17 @@ const UserRegistration = () => {
                                 </Grid>
 
                                 {/* Submit Button */}
-                                <Grid item xs={12} sx={{ display: "flex", justifyContent: "end", marginTop: "16px" }}>
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        onClick={handleUserSubmit}
-                                        sx={{ borderRadius: "8px", padding: "10px 24px", fontWeight: "bold" }}
-                                    >
-                                        Submit
-                                    </Button>
+
+                                <Grid item xs={12}>
+                                    <Grid container spacing={2} justifyContent="end">
+                                        <Grid item>
+                                            <Button color='primary' variant="contained" onClick={handleUserSubmit} >Submit</Button>
+                                        </Grid>
+                                        <Grid item>
+                                            <Button color='error' variant="contained" onClick={handlecancel} >cancel</Button>
+                                        </Grid>
+                                    </Grid>
+
                                 </Grid>
                             </Grid>
                         </CardContent>
@@ -354,7 +452,7 @@ const UserRegistration = () => {
 
                 {/* USER ADD BUTTON END HERE  */}
 
-                {showForm && (
+                {showForm ? (
 
                     <Card>
                         <CardContent>
@@ -368,153 +466,11 @@ const UserRegistration = () => {
                                     <Grid item xl={6} lg={6}>
                                         <Grid container spacing={2} justifyContent={'space-between'}>
 
-                                            {/* <Grid item xl={3} lg={3} xs={12}>
-                                            <Typography>Date</Typography>
-                                        </Grid>
-                                        <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                            <FormControl fullWidth>
-                                                <TextField
-                                                    variant="outlined"
-                                                    name='date'
-                                                    value={''}
-                                                    type="date"
-                                                    InputLabelProps={{
-                                                        shrink: true,
-                                                    }}
-                                                />
-                                            </FormControl>
-                                        </Grid> */}
-
-                                            {/* <Grid item xl={3} lg={3} xs={12}>
-                                            <Typography className='label'>User Name</Typography>
-                                        </Grid>
-                                        <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                            <FormControl fullWidth>
-                                                <TextField variant='outlined' name='user_name'  
-                                                value={values.user_name} 
-                                                onBlur={handleUsernameChange}  
-                                                error={available !== null && !available.have}
-                                                onChange={handleChange} />
-                                                {
-                                                    available && (
-                                                        <FormHelperText style={{color:available.have?"green":"red"}}>{available.message}</FormHelperText>
-                                                    )
-                                                }
-                                            </FormControl>
-                                        </Grid> */}
-
-                                            {/* <Grid item xl={3} lg={3} xs={12}>
-                                            <Typography>Password</Typography>
-                                        </Grid>
-                                        <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                            <FormControl fullWidth>
-                                                <TextField variant='outlined' name='password' value={values.password}  onChange={handleChange} />
-                                            </FormControl>
-                                        </Grid> */}
-
-
-                                            {/* <Grid item xl={3} lg={3} xs={12}>
-                                            <Typography>Identity Number</Typography>
-                                        </Grid>
-                                        <Grid item xl={7} lg={7} sm={12} xs={12}  >
-                                            <FormControl fullWidth>
-                                                <TextField variant='outlined' name='identification_no' value={values.identification_no}  onChange={handleChange} />
-                                            </FormControl>
-                                        </Grid> */}
-
-
-
-                                            {/* <Grid item xl={3} lg={3} xs={12}>
-                                            <Typography>Security Level</Typography>
-                                        </Grid>
-                                        <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                            <FormControl fullWidth>
-                                                <Select variant='outlined' name="rights" value={values.rights} onChange={handleChange}>
-                                                    <MenuItem value='0' disabled>Select</MenuItem>
-                                                    <MenuItem value='Operator'>Operator</MenuItem>
-                                                    <MenuItem value='Maintenance'>Maintenance</MenuItem>
-                                                    <MenuItem value='ME'>ME</MenuItem>
-                                                </Select>
-                                            </FormControl>
-                                        </Grid> */}
-
 
 
                                         </Grid>
                                     </Grid>
-                                    {/* User details column 1 end here */}
 
-
-                                    {/* User details column 2 start here */}
-                                    {/* <Grid item xl={6} lg={6}>
-                                    <Grid container spacing={2} justifyContent={'space-between'}>
-
-                                        <Grid item xl={3} lg={3} xs={12}>
-                                            <Typography>Time</Typography>
-                                        </Grid>
-                                        <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                            <FormControl fullWidth>
-                                                <TextField
-                                                    variant='outlined'
-                                                    type="time"
-                                                    name='time'
-                                                    value={values.time}
-                                                    onChange={handleChange}
-                                                    InputLabelProps={{
-                                                        shrink: true,
-                                                    }}
-                                                />
-                                            </FormControl>
-                                        </Grid>
-
-                                        
-
-                                        <Grid item xl={3} lg={3} xs={12}>
-                                            <Typography>Repeat Password</Typography>
-                                        </Grid>
-                                        <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                            <FormControl fullWidth>
-                                                <TextField variant='outlined' name='password' value={values.password}  onChange={handleChange} />
-                                            </FormControl>
-                                        </Grid>
-
-                                        <Grid item xl={3} lg={3} xs={12}>
-                                            <Typography>Personal ID</Typography>
-                                        </Grid>
-                                        <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                            <FormControl fullWidth>
-                                                <TextField variant='outlined' name='personal_id' value={values.personal_id}  onChange={handleChange} />
-                                            </FormControl>
-                                        </Grid>
-
-                                        {/* <Grid item xl={4} lg={3} xs={12}>
-                                            <Typography>Photo</Typography>
-                                        </Grid> */}
-                                    {/* 
-                                        <Grid item xl={3} lg={3} sm={12} xs={12}>
-                                            <FormControl fullWidth>
-                                                <Button
-                                                    component="label"
-                                                    role={undefined}
-                                                    variant="contained"
-                                                    tabIndex={-1}
-                                                    name='photo'
-                                                    startIcon={<CloudUploadIcon />}
-                                                >
-                                                    Upload file
-                                                    <VisuallyHiddenInput type="file" />
-                                                </Button>
-                                            </FormControl>
-                                        </Grid> */}
-
-
-                                    {/* <Grid item xl={3} lg={3} sm={12} xs={12}>
-                                            <img height={'150px'} width={'150px'} alt='' />
-                                        </Grid> */}
-
-                                    {/* </Grid>
-                                </Grid> */}
-                                    {/* User details column 2 end here */}
 
                                     {/* Title 1  */}
                                     <Grid item xs={12}>
@@ -563,18 +519,7 @@ const UserRegistration = () => {
                                             </Grid>
                                             <Grid item xl={7} lg={7} sm={12} xs={12}>
                                                 <FormControl fullWidth>
-                                                    {/* <Select variant='outlined' defaultValue={'0'}
-                                                labelId="demo-controlled-open-select-label"
-                                                id="demo-controlled-open-select"
-                                                value={selectedValue}
-                                                onChange={handleChange}
-                                            >
-                                                <MenuItem value="0">
-                                                    <em>None</em>
-                                                </MenuItem>
-                                                <MenuItem value={'Free'}>Free</MenuItem>
-                                                <MenuItem value={'Sab'}>Sab</MenuItem>
-                                            </Select> */}
+
 
                                                     <Select variant='outlined' defaultValue={'0'} name='section_seam_1' value={values.section_seam_1} onChange={handleChange}>
                                                         <MenuItem value='0' disabled>Select</MenuItem>
@@ -720,358 +665,6 @@ const UserRegistration = () => {
                                         </Grid>
                                     </Grid>
 
-
-                                    {/* Stitches 2 end here  */}
-
-
-                                    {/* <Grid item xs={12}>
-                                    <Grid container spacing={2}>
-                                        <div className='border-top titletext3'></div>
-                                    </Grid>
-                                </Grid> */}
-
-                                    {/* Stitches 2 start here  */}
-                                    {/* <Grid item xl={6} lg={6}>
-
-                                    <Grid container spacing={2} justifyContent={'space-between'}>
-
-                                        <Grid item xl={3} lg={3} xs={12}>
-                                            <Typography>Stitching Types</Typography>
-                                        </Grid>
-                                        <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                            <FormControl fullWidth>
-                                                {/* <Select variant='outlined' defaultValue={'0'}
-                                                labelId="demo-controlled-open-select-label"
-                                                id="demo-controlled-open-select"
-                                                value={selectedValue}
-                                                onChange={handleChange}
-                                            >
-                                                <MenuItem value="0">
-                                                    <em>None</em>
-                                                </MenuItem>
-                                                <MenuItem value={'Free'}>Free</MenuItem>
-                                                <MenuItem value={'Sab'}>Sab</MenuItem>
-                                            </Select> */}
-
-                                    {/* <Select variant='outlined' value={values.section_seam_2} name='section_seam_2'  onChange={handleChange}>
-                                                    <MenuItem value='0' disabled>Select</MenuItem> */}
-                                    {/* <MenuItem value={'Free'}>Free</MenuItem> */}
-                                    {/* <MenuItem value={'Sab'}>Sab</MenuItem>
-                                                </Select>
-
-                                            </FormControl>
-                                        </Grid>
-
-                                        <Grid item xl={3} lg={3} xs={12}>
-                                            <Typography>Thread Tension</Typography>
-                                        </Grid>
-                                        <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                            <FormControl fullWidth>
-                                                <TextField variant='outlined' name='thread_tension_2' value={values.thread_tension_2}  onChange={handleChange} />
-                                            </FormControl>
-                                        </Grid>
-
-                                        <Grid item xl={3} lg={3} xs={12}>
-                                            <Typography>Stiches Length</Typography>
-                                        </Grid>
-                                        <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                            <FormControl fullWidth>
-                                                <TextField
-                                                    variant="outlined"
-                                                    name='stiches_length_2'
-                                                    value={values.stiches_length_2}
-                                                    onChange={handleChange}
-                                                />
-                                            </FormControl>
-                                        </Grid>
-
-                                        <Grid item xl={3} lg={3} xs={12}>
-                                            <Typography>Foot Pressure</Typography>
-                                        </Grid>
-                                        <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                            <FormControl fullWidth>
-                                                <TextField
-                                                    variant='outlined'
-                                                    name='foot_pressure_2'
-                                                   value={values.foot_pressure_2}
-                                                    onChange={handleChange}
-                                                />
-                                            </FormControl>
-                                        </Grid>
-                                           <Grid item xl={3} lg={3} xs={12}>
-                                            <Typography>No Of Stitches (MAX)</Typography>
-                                        </Grid>
-                                        <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                            <FormControl fullWidth>
-                                                <TextField
-                                                    variant="outlined"
-                                                    name='no_stitches_max2'
-                                                    value={values.no_stitches_max2}
-                                                    onChange={handleChange}
-                                                />
-                                            </FormControl>
-                                        </Grid>
-
-                                    </Grid>
-
-
-
-                                </Grid> */}
-
-                                    {/* <Grid item xl={6} lg={6}>
-                                    <Grid container spacing={2} justifyContent={'space-between'}>
-
-                                        <Grid item xl={3} lg={3} xs={12}>
-                                            <Typography>Foot Height</Typography>
-                                        </Grid>
-                                        <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                            <FormControl fullWidth>
-                                                <TextField variant='outlined'
-                                                    name='foot_height_2'
-                                                    type='number'
-                                                    value={values.foot_height_2}
-                                                    onChange={handleChange}
-                                                />
-                                            </FormControl>
-                                        </Grid>
-
-                                        <Grid item xl={3} lg={3} xs={12}>
-                                            <Typography>Sewing Spped</Typography>
-                                        </Grid>
-                                        <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                            <FormControl fullWidth>
-                                                <TextField variant='outlined'
-                                                    name='sewing_speed_2'
-                                                    value={values.sewing_speed_2}
-                                                    onChange={handleChange}
-                                                />
-                                            </FormControl>
-                                        </Grid>
-
-                                        <Grid item xl={3} lg={3} xs={12}>
-                                            <Typography>Walking Foot Stoke</Typography>
-                                        </Grid>
-                                        <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                            <FormControl fullWidth>
-                                                <TextField
-                                                    variant='outlined'
-                                                    name='walking_fot_stoke2'
-                                                    value={values.walking_fot_stoke2}
-                                                    onChange={handleChange}
-
-                                                />
-                                            </FormControl>
-                                        </Grid>
-
-                                        <Grid item xl={3} lg={3} xs={12}>
-                                            <Typography>No Of Stitches</Typography>
-                                        </Grid>
-                                        <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                            <FormControl fullWidth>
-                                                <TextField
-                                                    variant="outlined"
-                                                    name='no_stitches2'
-                                                    value={values.no_stitches2}
-                                                    onChange={handleChange}
-                                                />
-                                            </FormControl>
-                                        </Grid>
-
-   <Grid item xl={3} lg={3} xs={12}>
-                                            <Typography>No Of Stitches (MIN)</Typography>
-                                        </Grid>
-                                        <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                            <FormControl fullWidth>
-                                                <TextField
-                                                    variant="outlined"
-                                                    name='no_stitches_min2'
-                                                    value={values.no_stitches_min2}
-                                                    onChange={handleChange}
-                                                />
-                                            </FormControl>
-                                        </Grid>
-
-
-
-
-                                    </Grid>
-                                </Grid> */}
-                                    {/* Stitches 2 end here  */}
-
-                                    {/* <Grid item xs={12}>
-                                    <Grid container spacing={2}>
-                                        <div className='border-top titletext4'></div>
-                                    </Grid>
-                                </Grid> */}
-
-                                    {/* Stitches 3 start here  */}
-
-                                    {/* <Grid item xl={6} lg={6}>
-
-                                    <Grid container spacing={2} justifyContent={'space-between'}>
-
-                                        <Grid item xl={3} lg={3} xs={12}>
-                                            <Typography>Stitching Types</Typography>
-                                        </Grid>
-                                        <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                            <FormControl fullWidth>
-                                                {/* <Select variant='outlined' defaultValue={'0'}
-                                                labelId="demo-controlled-open-select-label"
-                                                id="demo-controlled-open-select"
-                                                value={selectedValue}
-                                                onChange={handleChange}
-                                            >
-                                                <MenuItem value="0">
-                                                    <em>None</em>
-                                                </MenuItem>
-                                                <MenuItem value={'Free'}>Free</MenuItem>
-                                                <MenuItem value={'Sab'}>Sab</MenuItem>
-                                            </Select> */}
-
-                                    {/* <Select variant='outlined' value={values.section_seam_3} name='section_seam_3'  onChange={handleChange}>
-                                                    <MenuItem value='0' disabled>Select</MenuItem> */}
-                                    {/* <MenuItem value={'Free'}>Free</MenuItem> */}
-                                    {/* <MenuItem value={'Sab'}>Sab</MenuItem> */}
-                                    {/* </Select> */}
-
-                                    {/* </FormControl> */}
-                                    {/* </Grid> */}
-
-                                    {/* <Grid item xl={3} lg={3} xs={12}>
-                                            <Typography>Thread Tension</Typography>
-                                        </Grid>
-                                        <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                            <FormControl fullWidth>
-                                                <TextField variant='outlined' name='thread_tension_3' value={values.thread_tension_3}  onChange={handleChange} />
-                                            </FormControl>
-                                        </Grid>
-
-                                        <Grid item xl={3} lg={3} xs={12}>
-                                            <Typography>Stiches Length</Typography>
-                                        </Grid>
-                                        <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                            <FormControl fullWidth>
-                                                <TextField
-                                                    variant="outlined"
-                                                    name='stiches_length_3'
-                                                    value={values.stiches_length_3}
-                                                    onChange={handleChange}
-                                                />
-                                            </FormControl>
-                                        </Grid>
-
-                                        <Grid item xl={3} lg={3} xs={12}>
-                                            <Typography>Foot Pressure</Typography>
-                                        </Grid>
-                                        <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                            <FormControl fullWidth>
-                                                <TextField
-                                                    variant='outlined'
-                                                    name='foot_pressure_3'
-                                                    value={values.foot_pressure_3}
-                                                    onChange={handleChange}
-                                                />
-                                            </FormControl>
-                                        </Grid>
-                                           <Grid item xl={3} lg={3} xs={12}>
-                                            <Typography>No Of Stitches (MAX)</Typography>
-                                        </Grid>
-                                        <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                            <FormControl fullWidth>
-                                                <TextField
-                                                    variant="outlined"
-                                                    name='no_stitches_max3'
-                                                    value={values.no_stitches_max3}
-                                                    onChange={handleChange}
-                                                />
-                                            </FormControl>
-                                        </Grid>
-
-                                    </Grid>
-
-
-
-                                </Grid> */}
-                                    {/* 
-                                <Grid item xl={6} lg={6}>
-                                    <Grid container spacing={2} justifyContent={'space-between'}>
-
-                                        <Grid item xl={3} lg={3} xs={12}>
-                                            <Typography>Foot Height</Typography>
-                                        </Grid>
-                                        <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                            <FormControl fullWidth>
-                                                <TextField variant='outlined'
-                                                    name='foot_height_3'
-                                                    type='number'
-                                                    value={values.foot_height_3}
-                                                    onChange={handleChange}
-                                                />
-                                            </FormControl>
-                                        </Grid>
-
-                                        <Grid item xl={3} lg={3} xs={12}>
-                                            <Typography>Sewing Spped</Typography>
-                                        </Grid>
-                                        <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                            <FormControl fullWidth>
-                                                <TextField variant='outlined'
-                                                    name='sewing_speed_3'
-                                                    value={values.sewing_speed_3}
-                                                    onChange={handleChange}
-                                                />
-                                            </FormControl>
-                                        </Grid>
-
-                                        <Grid item xl={3} lg={3} xs={12}>
-                                            <Typography>Walking Foot Stoke</Typography>
-                                        </Grid>
-                                        <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                            <FormControl fullWidth>
-                                                <TextField
-                                                    variant='outlined'
-                                                    name='walkimg_fot_stoke3'
-                                                    value={values.walkimg_fot_stoke3}
-                                                    onChange={handleChange}
-
-                                                />
-                                            </FormControl>
-                                        </Grid>
-
-                                        <Grid item xl={3} lg={3} xs={12}>
-                                            <Typography>No Of Stitches</Typography>
-                                        </Grid>
-                                        <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                            <FormControl fullWidth>
-                                                <TextField
-                                                    variant="outlined"
-                                                    name='no_stitches3'
-                                                    value={values.no_stitches3}
-                                                    onChange={handleChange}
-                                                />
-                                            </FormControl>
-                                        </Grid>
-
-   <Grid item xl={3} lg={3} xs={12}>
-                                            <Typography>No Of Stitches (MIN)</Typography>
-                                        </Grid>
-                                        <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                            <FormControl fullWidth>
-                                                <TextField
-                                                    variant="outlined"
-                                                    name='no_stitches_min3'
-                                                    value={values.no_stitches_min3}
-                                                    onChange={handleChange}
-                                                />
-                                            </FormControl>
-                                        </Grid>
-
-
-
-
-                                    </Grid>
-                                </Grid> */}
-                                    {/* Stitches 3 end here  */}
                                     <Grid item xs={12}>
                                         <Grid container spacing={2}>
                                             <div className='border-top titletext5'></div>
@@ -1213,6 +806,9 @@ const UserRegistration = () => {
                                                     : <Button variant='contained' type='submit' color="success" onClick={handlesubmit} startIcon={<DoneIcon />}>Submit</Button>
                                                 }
                                             </Grid>
+                                            <Grid item>
+                                                <Button color='error' variant="contained" onClick={handlecancel} >cancel</Button>
+                                            </Grid>
 
                                         </Grid>
                                     </Grid>
@@ -1224,15 +820,14 @@ const UserRegistration = () => {
                         </CardContent>
                     </Card>
 
-                )
-                }
+                ) : (<>
 
-                <ThemeProvider theme={tableTheme} >
-                    <Box sx={{ width: 1 }} marginTop={'1%'}>
-                        <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
-                            <Box gridColumn="span 12">
+                    <ThemeProvider theme={tableTheme} >
+                        <Box sx={{ width: 1 }} marginTop={'1%'}>
+                            <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
+                                {/* <Box gridColumn="span 12">
                                 <MaterialReactTable
-                                    columns={columns}
+                                    columns={Articlecolumns}
                                     data={data}
                                     enableRowSelection
                                     enableColumnOrdering
@@ -1245,13 +840,21 @@ const UserRegistration = () => {
                                             {/* <Button variant="contained" startIcon={<PhotoCamera />}>
                                 User Photo
                             </Button> */}
-                                        </>
+                                {/* </>
                                     )}
                                 />
+                            </Box> */}
+                                <Box gridColumn="span 12">
+                                    <ArticlesTable data={articledata} />
+                                </Box>
+                                <Box gridColumn="span 12">
+                                    <UsersTable data={userData} />
+                                </Box>
                             </Box>
                         </Box>
-                    </Box>
-                </ThemeProvider>
+                    </ThemeProvider>
+                </>)
+                }
             </>)}
         </div >
     )

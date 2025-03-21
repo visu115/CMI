@@ -8,6 +8,7 @@ import { commondata } from '../App';
 
 
 const User_dashboard = () => {
+
     const navigate = useNavigate();
     const { socket, setsocket } = useContext(commondata)
     const [currentDateTime, setCurrentDateTime] = useState(new Date());
@@ -36,7 +37,7 @@ const User_dashboard = () => {
     // Access the user_name property
     const userName = user?.user_name;  // or user['user_name']
     //console.log(userName);  // Output the userName
-const rights=user?.rights
+    const rights = user?.rights
 
     const fetchData = async () => {
         try {
@@ -138,7 +139,7 @@ const rights=user?.rights
                                 <TextField variant='outlined' value={formattedDate} />
                             </FormControl>
                         </Grid>
-                       
+
                         <Grid item xl={2} lg={2} xs={12}>
                             <Typography>Time</Typography>
                         </Grid>
