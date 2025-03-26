@@ -24,11 +24,13 @@ import { useRef } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import server from './server/server.js';
 import Ready_scan from './Pages/ready_scan.js';
+import Report from './Pages/report.js';
 
 export const commondata = createContext()
 function App() {
 
   const [socket, setsocket] = useState(null);
+  const [articleCodeStatus, setArticleCodeStatus] = useState(false);
   const [alt, setalt] = useState({ open: false, data: "" });
   const [user, setUser] = useState({});
   const [login, setlogin] = useState(sessionStorage.getItem("user") || sessionStorage.getItem("admin") ? true : false)
@@ -479,7 +481,7 @@ function App() {
   );
 
   return (
-    <commondata.Provider value={{ setTestingData, socket, login, setlogin, user, setUser, setsocket, testingData, setCheckStatus, checkStatus, alt, setalt }}>
+    <commondata.Provider value={{ setTestingData, socket, login, setArticleCodeStatus, articleCodeStatus, setlogin, user, setUser, setsocket, testingData, setCheckStatus, checkStatus, alt, setalt }}>
       <div className="App">
 
 
@@ -573,6 +575,7 @@ function App() {
                   <Route path="/user_dashboard" element={<User_dashboard />} />
                   <Route path="/sweing" element={<Sweing />} />
                   <Route path="/register" element={<UserRegistration />} />
+                  <Route path="/report" element={<Report />} />
                   <Route path="/checkScanner" element={<CheckScanner />} />
                   <Route path="/alram_table" element={<Alram_Database />} />
                   <Route path="/barcode_scanner" element={<Barcode_scanner />} />

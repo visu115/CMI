@@ -1,4 +1,4 @@
-import { Box, Typography, CircularProgress } from '@mui/material';
+import { Box, Typography, CircularProgress, Card, CardContent } from '@mui/material';
 import { MaterialReactTable } from 'material-react-table';
 import React, { useEffect, useState, useContext, useMemo } from 'react';
 import server from '../server/server.js';
@@ -84,28 +84,35 @@ const AlarmTable = () => {
 
   return (
     <div>
-      <Box sx={{ width: 1 }} marginTop={'1%'}>
-        <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
-          <Box gridColumn="span 12">
-            <Box sx={{ marginY: '1%' }}>
-              <Typography variant={'h6'}>Alarm Database</Typography>
+      <Box sx={{ p: 3 }}>
+        <Typography variant="h6" fontWeight="bold" gutterBottom>
+          Alarm History
+        </Typography>
+
+        <Card elevation={3} sx={{ borderRadius: 2 }}>
+          <CardContent>
+            <Box sx={{ width: 1 }} marginTop={'1%'}>
+              <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
+                <Box gridColumn="span 12">
+                  <MaterialReactTable
+                    columns={columns}
+                    data={getdata}
+                    // enableRowSelection
+                    // enableColumnOrdering
+                    initialState={{
+                      sorting: [
+                        {
+                          id: 'createdAt_date_column',
+                          desc: true,
+                        },
+                      ],
+                    }}
+                  />
+                </Box>
+              </Box>
             </Box>
-            <MaterialReactTable
-              columns={columns}
-              data={getdata}
-              enableRowSelection
-              enableColumnOrdering
-              initialState={{
-                sorting: [
-                  {
-                    id: 'createdAt_date_column',
-                    desc: true,
-                  },
-                ],
-              }}
-            />
-          </Box>
-        </Box>
+          </CardContent>
+        </Card>
       </Box>
     </div>
   );

@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, FormControl, Grid, TextField, Typography } from '@mui/material'
+import { Box, Button, Card, CardContent, Container, FormControl, Grid, Paper, TextField, Typography } from '@mui/material'
 import { React, Link, useState, useEffect, useContext } from 'react'
 import { Link as RouterLink } from 'react-router-dom';
 import server from '../server/server';
@@ -72,10 +72,7 @@ const User_dashboard = () => {
             // Fetch data from the second endpoint
             const response_db = await server.get('/check_db');
             const GetAddress = response_db.data;
-            //console.log(GetAddress);
 
-            //console.log(Address[0].D100); // Output: 4
-            // Extract the unique data you want to compare
             const uniqueData1 = Address[0].D100; // Replace with the actual unique data key
 
             const uniqueData2 = GetAddress[0].seam_no; // Replace with the actual unique data key
@@ -95,114 +92,185 @@ const User_dashboard = () => {
             console.error('There was an error fetching the data!', e);
         }
 
-        //   var dataIsValid ;
 
-        //   if (dataIsValid) {
-        //     // Redirect to the next page
-        //     navigate('/sweing');
-        //   } else {
-        //     // Show alert message
-        //     alert('Data is not valid. Please check your input.');
-        //   }
     }
 
 
-
-    // console.log(userName);
-
     return (
-        <div>
-            <Card >
-                <CardContent>
-                    <Grid container spacing={2} columnSpacing={13}>
-                        <Grid item xl={2} lg={2} xs={12}>
-                            <Typography>Name</Typography>
-                        </Grid>
-                        <Grid item xl={4} lg={4} sm={12} xs={12}>
-                            <FormControl fullWidth>
-                                <TextField variant='outlined' value={userName} />
-                            </FormControl>
-                        </Grid>
-                        <Grid item xl={2} lg={2} xs={12}>
-                            <Typography>Rights</Typography>
-                        </Grid>
-                        <Grid item xl={4} lg={4} sm={12} xs={12}>
-                            <FormControl fullWidth>
-                                <TextField variant='outlined' value={rights} />
-                            </FormControl>
-                        </Grid>
-                        <Grid item xl={2} lg={2} xs={12}>
-                            <Typography className='label'>Date</Typography>
-                        </Grid>
-                        <Grid item xl={4} lg={4} sm={12} xs={12}>
-                            <FormControl fullWidth>
-                                <TextField variant='outlined' value={formattedDate} />
-                            </FormControl>
-                        </Grid>
+        // <div>
+        //     <Card >
+        //         <CardContent>
+        //             <Grid container spacing={2} columnSpacing={13}>
+        //                 <Grid item xl={2} lg={2} xs={12}>
+        //                     <Typography>Name</Typography>
+        //                 </Grid>
+        //                 <Grid item xl={4} lg={4} sm={12} xs={12}>
+        //                     <FormControl fullWidth>
+        //                         <TextField variant='outlined' value={userName} />
+        //                     </FormControl>
+        //                 </Grid>
+        //                 <Grid item xl={2} lg={2} xs={12}>
+        //                     <Typography>Rights</Typography>
+        //                 </Grid>
+        //                 <Grid item xl={4} lg={4} sm={12} xs={12}>
+        //                     <FormControl fullWidth>
+        //                         <TextField variant='outlined' value={rights} />
+        //                     </FormControl>
+        //                 </Grid>
+        //                 <Grid item xl={2} lg={2} xs={12}>
+        //                     <Typography className='label'>Date</Typography>
+        //                 </Grid>
+        //                 <Grid item xl={4} lg={4} sm={12} xs={12}>
+        //                     <FormControl fullWidth>
+        //                         <TextField variant='outlined' value={formattedDate} />
+        //                     </FormControl>
+        //                 </Grid>
 
-                        <Grid item xl={2} lg={2} xs={12}>
-                            <Typography>Time</Typography>
+        //                 <Grid item xl={2} lg={2} xs={12}>
+        //                     <Typography>Time</Typography>
+        //                 </Grid>
+        //                 <Grid item xl={4} lg={4} sm={12} xs={12}>
+        //                     <FormControl fullWidth>
+        //                         <TextField variant='outlined' value={formattedTime} />
+        //                     </FormControl>
+        //                 </Grid>
+
+        //             </Grid>
+        //             <Grid container spacing={3} marginTop={'1%'} justifyContent={'end'}>
+
+        //                 <Grid item >
+        //                     <Button
+
+        //                         variant='contained'
+        //                         onClick={checkData}
+        //                     >
+        //                         Next
+        //                     </Button>
+        //                 </Grid>
+        //             </Grid>
+        //         </CardContent>
+        //     </Card>
+        // </div>
+        <Box mt={1}>
+            <Paper
+                elevation={4}
+                sx={{
+                    mt: 5,
+                    p: 2,
+                    borderRadius: 3,
+                    background: 'linear-gradient(145deg, #f0f4f8 0%, #e6eaf0 100%)',
+                    boxShadow: '0 3px 3px 3px rgba(0,0,0,0.1)',
+                    // maxWidth: 1200,
+                    width: '100%',
+                    margin: 'auto'
+                }}
+            >
+                <Box sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    mb: 3
+                }}>
+                    <Typography
+                        variant="h4"
+                        sx={{
+                            mb: 2,
+                            fontWeight: 700,
+                            color: 'primary.dark',
+                            textTransform: 'uppercase',
+                            letterSpacing: 1,
+                            position: 'relative',
+                            '&::after': {
+                                content: '""',
+                                position: 'absolute',
+                                bottom: -8,
+                                left: '50%',
+                                transform: 'translateX(-50%)',
+                                width: '60%',
+                                height: 3,
+                                backgroundColor: 'primary.main'
+                            }
+                        }}
+                    >
+                        User Dashboard
+                    </Typography>
+                </Box>
+
+                <Grid container spacing={3}>
+                    {[
+                        { label: 'Name', value: userName, icon: '👤' },
+                        { label: 'Rights', value: rights, icon: '🔒' },
+                        { label: 'Date', value: formattedDate, icon: '📅' },
+                        { label: 'Time', value: formattedTime, icon: '⏰' }
+                    ].map(({ label, value, icon }) => (
+                        <Grid item xs={6} key={label}>
+                            <Box sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                backgroundColor: 'background.paper',
+                                borderRadius: 2,
+                                p: 2,
+                                boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+                            }}>
+                                <Box sx={{
+                                    mr: 2,
+                                    fontSize: 24,
+                                    opacity: 0.7
+                                }}>
+                                    {icon}
+                                </Box>
+                                <Box sx={{ flexGrow: 1 }}>
+                                    <Typography
+                                        variant="subtitle2"
+                                        color="text.secondary"
+                                        sx={{ mb: 0.5 }}
+                                    >
+                                        {label}
+                                    </Typography>
+                                    <Typography
+                                        variant="body1"
+                                        sx={{
+                                            fontWeight: 600,
+                                            color: 'text.primary'
+                                        }}
+                                    >
+                                        {value}
+                                    </Typography>
+                                </Box>
+                            </Box>
                         </Grid>
-                        <Grid item xl={4} lg={4} sm={12} xs={12}>
-                            <FormControl fullWidth>
-                                <TextField variant='outlined' value={formattedTime} />
-                            </FormControl>
-                        </Grid>
-                        {/* <Grid item xl={2} lg={2} xs={12}>
-                            <Typography>User ID</Typography>
-                        </Grid>
-                        <Grid item xl={4} lg={4} sm={12} xs={12}>
-                            <FormControl fullWidth>
-                                <TextField variant='outlined' value={user.identification_no} />
-                            </FormControl>
-                        </Grid> */}
-                        {/* <Grid item xl={2} lg={2} xs={12}>
-                            <Typography>Machine</Typography>
-                        </Grid>
-                        <Grid item xl={4} lg={4} sm={12} xs={12}>
-                            <FormControl fullWidth>
-                                <TextField variant='outlined' />
-                            </FormControl>
-                        </Grid> */}
-                        {/* <Grid item xl={2} lg={2} xs={12}>
-                            <Typography>Security Level</Typography>
-                        </Grid>
-                        <Grid item xl={4} lg={4} sm={12} xs={12}>
-                            <FormControl fullWidth>
-                                <TextField variant='outlined' />
-                            </FormControl>
-                        </Grid> */}
-                    </Grid>
-                    <Grid container spacing={3} marginTop={'1%'} justifyContent={'end'}>
-                        {/* <Grid item >
-                            <Button variant='contained'>Access</Button>
-                        </Grid>
-                        <Grid item >
-                            <Button variant='contained'>Sew</Button>
-                        </Grid>
-                        <Grid item >
-                            <Button variant='contained'>Seam.rec</Button>
-                        </Grid> */}
-                        {/* <Grid item >
-                            <Button variant='contained' color='success'>Database</Button>
-                        </Grid>
-                        <Grid item >
-                            <Button variant='contained' color='error'>Check</Button>
-                        </Grid> */}
-                        <Grid item >
-                            <Button
-                                //component={RouterLink}
-                                //to='/sweing'
-                                variant='contained'
-                                onClick={checkData}
-                            >
-                                Next
-                            </Button>
-                        </Grid>
-                    </Grid>
-                </CardContent>
-            </Card>
-        </div>
+                    ))}
+                </Grid>
+
+                {/* <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        mt: 4
+                    }}
+                >
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={checkData}
+                        sx={{
+                            px: 5,
+                            py: 1.5,
+                            borderRadius: 3,
+                            boxShadow: '0 4px 10px rgba(0,0,0,0.2)',
+                            transition: 'all 0.3s ease',
+                            '&:hover': {
+                                transform: 'translateY(-2px)',
+                                boxShadow: '0 6px 15px rgba(0,0,0,0.3)'
+                            }
+                        }}
+                    >
+                        Start Machine
+                    </Button>
+                </Box> */}
+            </Paper>
+        </Box>
+
     )
 }
 

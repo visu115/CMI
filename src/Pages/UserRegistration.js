@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, Container, Modal, FormControl, Grid, MenuItem, Select, TextField, Typography, ThemeProvider, createTheme, useTheme, Box, InputAdornment, InputLabel, colors, FormHelperText, CardHeader } from '@mui/material'
+import { Button, Card, CardContent, Container, Modal, FormControl, Grid, MenuItem, Select, TextField, Typography, ThemeProvider, createTheme, useTheme, Box, InputAdornment, InputLabel, colors, FormHelperText, CardHeader, IconButton, Paper } from '@mui/material'
 import { React, useEffect, useMemo, useState } from 'react'
 import server from '../server/server';
 import DoneIcon from '@mui/icons-material/Done';
@@ -10,6 +10,7 @@ import { styled } from '@mui/material/styles';
 import { MaterialReactTable } from 'material-react-table';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { Form, useNavigate } from 'react-router-dom';
+import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 
 
 
@@ -352,480 +353,621 @@ const UserRegistration = () => {
     };
     return (
         <div>
+
             {showUserForm ? (<>
+
                 <Box sx={{ display: "flex", justifyContent: "center", marginTop: "40px" }}>
+
                     <Card sx={{ maxWidth: "500px", width: "100%", padding: "24px", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", borderRadius: "12px" }}>
-                        <CardHeader title="Add User" sx={{ textAlign: "center", fontSize: "1.2rem", fontWeight: "bold" }} />
-                        <CardContent>
-                            <Typography variant="h6" sx={{ textAlign: "center", marginBottom: "16px", color: "#555" }}>
-                                Fill in the details below
-                            </Typography>
-                            <Grid container spacing={2}>
-                                {/* User Name Field */}
-                                <Grid item xs={12}>
-                                    <Typography sx={{ fontWeight: "bold", marginBottom: "5px" }}>
-                                        User Name
+                        <Box>
+                            <Paper
+                                elevation={4}
+                                sx={{
+                                    mt: 5,
+                                    p: 2,
+                                    borderRadius: 3,
+                                    background: 'linear-gradient(145deg, #f0f4f8 0%, #e6eaf0 100%)',
+                                    boxShadow: '0 3px 3px 3px rgba(0,0,0,0.1)',
+                                    // maxWidth: 1200,
+                                    width: '100%',
+                                    margin: 'auto'
+                                }}
+                            >
+                                <CardHeader title="Add User" sx={{ textAlign: "center", fontSize: "1.2rem", fontWeight: "bold" }} />
+                                <CardContent>
+                                    <Typography variant="h6" sx={{ textAlign: "center", marginBottom: "16px", color: "#555" }}>
+                                        Fill in the details below
                                     </Typography>
-                                    <FormControl fullWidth>
-                                        <TextField
-                                            variant="outlined"
-                                            name="user_name"
-                                            value={formData.user_name}
-                                            onChange={handleuserchange}
-                                            placeholder="Enter username"
-                                            sx={{ backgroundColor: "#f9f9f9", borderRadius: "8px" }}
-                                        />
-                                    </FormControl>
-                                </Grid>
-
-                                {/* Password Field */}
-                                <Grid item xs={12}>
-                                    <Typography sx={{ fontWeight: "bold", marginBottom: "5px" }}>
-                                        Password
-                                    </Typography>
-                                    <FormControl fullWidth>
-                                        <TextField
-                                            variant="outlined"
-                                            type="password"
-                                            autoComplete='new-password'
-                                            name="Password"
-                                            value={formData.password}
-                                            onChange={handleuserchange}
-                                            placeholder="Enter password"
-                                            sx={{ backgroundColor: "#f9f9f9", borderRadius: "8px" }}
-                                        />
-                                    </FormControl>
-                                </Grid>
-
-                                {/* Rights Selection Field */}
-                                <Grid item xs={12}>
-                                    <Typography sx={{ fontWeight: "bold", marginBottom: "5px" }}>
-                                        Rights
-                                    </Typography>
-                                    <FormControl fullWidth>
-                                        <Select
-                                            value={formData.rights}
-                                            name='rights'
-                                            onChange={handleuserchange}
-                                            displayEmpty
-                                            sx={{ backgroundColor: "#f9f9f9", borderRadius: "8px" }}
-                                        >
-                                            <MenuItem value="" disabled>Select Rights</MenuItem>
-                                            <MenuItem value="Maintenance">Maintenance</MenuItem>
-                                            <MenuItem value="Operator">Operator</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-
-                                {/* Submit Button */}
-
-                                <Grid item xs={12}>
-                                    <Grid container spacing={2} justifyContent="end">
-                                        <Grid item>
-                                            <Button color='primary' variant="contained" onClick={handleUserSubmit} >Submit</Button>
+                                    <Grid container spacing={2}>
+                                        {/* User Name Field */}
+                                        <Grid item xs={12}>
+                                            <Typography sx={{ fontWeight: "bold", marginBottom: "5px" }}>
+                                                User Name
+                                            </Typography>
+                                            <FormControl fullWidth>
+                                                <TextField
+                                                    variant="outlined"
+                                                    name="user_name"
+                                                    value={formData.user_name}
+                                                    onChange={handleuserchange}
+                                                    placeholder="Enter username"
+                                                    sx={{ backgroundColor: "#f9f9f9", borderRadius: "8px" }}
+                                                />
+                                            </FormControl>
                                         </Grid>
-                                        <Grid item>
-                                            <Button color='error' variant="contained" onClick={handlecancel} >cancel</Button>
+
+                                        {/* Password Field */}
+                                        <Grid item xs={12}>
+                                            <Typography sx={{ fontWeight: "bold", marginBottom: "5px" }}>
+                                                Password
+                                            </Typography>
+                                            <FormControl fullWidth>
+                                                <TextField
+                                                    variant="outlined"
+                                                    type="password"
+                                                    autoComplete='new-password'
+                                                    name="Password"
+                                                    value={formData.password}
+                                                    onChange={handleuserchange}
+                                                    placeholder="Enter password"
+                                                    sx={{ backgroundColor: "#f9f9f9", borderRadius: "8px" }}
+                                                />
+                                            </FormControl>
+                                        </Grid>
+
+                                        {/* Rights Selection Field */}
+                                        <Grid item xs={12}>
+                                            <Typography sx={{ fontWeight: "bold", marginBottom: "5px" }}>
+                                                Rights
+                                            </Typography>
+                                            <FormControl fullWidth>
+                                                <Select
+                                                    value={formData.rights}
+                                                    name='rights'
+                                                    onChange={handleuserchange}
+                                                    displayEmpty
+                                                    sx={{ backgroundColor: "#f9f9f9", borderRadius: "8px" }}
+                                                >
+                                                    <MenuItem value="" disabled>Select Rights</MenuItem>
+                                                    <MenuItem value="Maintenance">Maintenance</MenuItem>
+                                                    <MenuItem value="Operator">Operator</MenuItem>
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+
+                                        {/* Submit Button */}
+
+                                        <Grid item xs={12}>
+                                            <Grid container spacing={2} justifyContent="end">
+                                                <Grid item>
+                                                    <Button color='primary' variant="contained" onClick={handleUserSubmit} >Create</Button>
+                                                </Grid>
+                                                <Grid item>
+                                                    <Button color='error' variant="contained" onClick={handlecancel} >Cancel</Button>
+                                                </Grid>
+                                            </Grid>
+
                                         </Grid>
                                     </Grid>
-
-                                </Grid>
-                            </Grid>
-                        </CardContent>
+                                </CardContent>
+                            </Paper>
+                        </Box>
                     </Card>
+
                 </Box>
+
             </>) : (<>
                 {/* USER ADD BUTTON START HERE  */}
+                <Box>
+                    <Paper
+                        elevation={4}
+                        sx={{
+                            mt: 5,
+                            p: 2,
+                            borderRadius: 3,
+                            background: 'linear-gradient(145deg, #f0f4f8 0%, #e6eaf0 100%)',
+                            boxShadow: '0 3px 3px 3px rgba(0,0,0,0.1)',
+                            // maxWidth: 1200,
+                            width: '100%',
+                            margin: 'auto'
+                        }}
+                    >
+                        <Grid container spacing={2} mt={1} style={{ marginBottom: `20px` }}>
+                            <Grid item>
+                                <Button variant='contained' endIcon={<AddIcon />} style={{ display: `flex`, alignItems: `center` }} onClick={handleButtonClick}>
+                                    New Article Creation
+                                </Button>
+                            </Grid>
+                            <Grid item>
+                                <Button variant='contained' endIcon={<AddIcon />} style={{ display: `flex`, alignItems: `center` }} onClick={handleAddNewUser}>
+                                    Add New user
+                                </Button>
+                            </Grid>
+                        </Grid>
 
-                <Grid container spacing={2} style={{ marginBottom: `20px` }}>
-                    <Grid item>
-                        <Button variant='contained' endIcon={<AddIcon />} style={{ display: `flex`, alignItems: `center` }} onClick={handleButtonClick}>
-                            New Article Creation
-                        </Button>
-                    </Grid>
-                    <Grid item>
-                        <Button variant='contained' endIcon={<AddIcon />} style={{ display: `flex`, alignItems: `center` }} onClick={handleAddNewUser}>
-                            Add New user
-                        </Button>
-                    </Grid>
-                </Grid>
+                        {/* USER ADD BUTTON END HERE  */}
 
-                {/* USER ADD BUTTON END HERE  */}
+                        {showForm ? (
 
-                {showForm ? (
+                            <Card>
+                                <CardContent>
+                                    {/* FORM START HERE  */}
 
-                    <Card>
-                        <CardContent>
-                            {/* FORM START HERE  */}
+                                    <form autoComplete='off'>
 
-                            <form autoComplete='off'>
+                                        <Grid container spacing={2} columnSpacing={10}>
 
-                                <Grid container spacing={2}>
-
-                                    {/* User details column 1 start here */}
-                                    <Grid item xl={6} lg={6}>
-                                        <Grid container spacing={2} justifyContent={'space-between'}>
+                                            {/* User details column 1 start here */}
+                                            <Grid item xl={6} lg={6}>
+                                                <Grid container spacing={2} justifyContent={'space-between'}>
 
 
+
+                                                </Grid>
+                                            </Grid>
+
+
+                                            {/* Title 1  */}
+                                            <Grid item xs={12}>
+                                                <Grid container spacing={2}>
+                                                    <div className='border-top titletext5'></div>
+                                                </Grid>
+                                            </Grid>
+                                            {/* Code Start */}
+
+                                            <Grid item xl={6} lg={6}>
+                                                <Grid container spacing={2} justifyContent={'space-between'}>
+                                                    <Grid item xl={3} lg={3} xs={12}>
+                                                        <Typography className='label'>Article Code</Typography>
+                                                    </Grid>
+                                                    <Grid item xl={7} lg={7} sm={12} xs={12}>
+                                                        <FormControl fullWidth>
+                                                            <TextField
+                                                                variant='outlined'
+                                                                name='article_code'
+                                                                value={values.article_code}
+                                                                onChange={handleChange}
+                                                                InputProps={{
+                                                                    endAdornment: (
+                                                                        <InputAdornment position="end">
+                                                                            <IconButton onClick={() => console.log('Scanning...')}
+                                                                                sx={{
+                                                                                    backgroundColor: "#1976d2", // Highlighted color (MUI primary blue)
+                                                                                    color: "#fff", // White icon color
+                                                                                    borderRadius: "5px",
+                                                                                    padding: "5px",
+                                                                                    "&:hover": {
+                                                                                        backgroundColor: "#1565c0" // Darker shade on hover
+                                                                                    }
+                                                                                }}
+                                                                            >
+                                                                                <QrCodeScannerIcon sx={{ fontSize: 25 }} />
+                                                                            </IconButton>
+                                                                        </InputAdornment>
+                                                                    ),
+                                                                }}
+                                                            />
+                                                        </FormControl>
+                                                    </Grid>
+                                                </Grid>
+                                            </Grid>
+                                            <Grid item xl={6} lg={6}>
+
+                                                <Grid container spacing={2} justifyContent={'space-between'}>
+
+                                                    <Grid item xl={3} lg={3} xs={12}>
+                                                        <Typography className='label'>Code Reader 1</Typography>
+                                                    </Grid>
+                                                    <Grid item xl={7} lg={7} sm={12} xs={12}>
+                                                        <FormControl fullWidth>
+                                                            <TextField variant='outlined' name='codereader1' value={values.codereader1} onChange={handleChange}
+                                                                InputProps={{
+                                                                    endAdornment: (
+                                                                        <InputAdornment position="end">
+                                                                            <IconButton onClick={() => console.log('Scanning...')}
+                                                                                sx={{
+                                                                                    backgroundColor: "#1976d2", // Highlighted color (MUI primary blue)
+                                                                                    color: "#fff", // White icon color
+                                                                                    borderRadius: "5px",
+                                                                                    padding: "5px",
+                                                                                    "&:hover": {
+                                                                                        backgroundColor: "#1565c0" // Darker shade on hover
+                                                                                    }
+                                                                                }}
+                                                                            >
+                                                                                <QrCodeScannerIcon sx={{ fontSize: 25 }} />
+                                                                            </IconButton>
+                                                                        </InputAdornment>
+                                                                    ),
+                                                                }} />
+                                                        </FormControl>
+                                                    </Grid>
+
+                                                </Grid>
+
+                                            </Grid>
+
+                                            <Grid item xl={6} lg={6}>
+
+                                                <Grid container spacing={2} justifyContent={'space-between'}>
+
+                                                    <Grid item xl={3} lg={3} xs={12}>
+                                                        <Typography className='label'>Code Reder 2</Typography>
+                                                    </Grid>
+                                                    <Grid item xl={7} lg={7} sm={12} xs={12}>
+                                                        <FormControl fullWidth>
+                                                            <TextField variant='outlined' name='codereader2' value={values.codereader2} onChange={handleChange}
+                                                                InputProps={{
+                                                                    endAdornment: (
+                                                                        <InputAdornment position="end">
+                                                                            <IconButton onClick={() => console.log('Scanning...')}
+                                                                                sx={{
+                                                                                    backgroundColor: "#1976d2", // Highlighted color (MUI primary blue)
+                                                                                    color: "#fff", // White icon color
+                                                                                    borderRadius: "5px",
+                                                                                    padding: "5px",
+                                                                                    "&:hover": {
+                                                                                        backgroundColor: "#1565c0" // Darker shade on hover
+                                                                                    }
+                                                                                }}
+                                                                            >
+                                                                                <QrCodeScannerIcon sx={{ fontSize: 25 }} />
+                                                                            </IconButton>
+                                                                        </InputAdornment>
+                                                                    ),
+                                                                }} />
+                                                        </FormControl>
+                                                    </Grid>
+
+                                                </Grid>
+
+
+
+
+                                            </Grid>
+
+                                            <Grid item xl={6} lg={6}>
+
+                                                <Grid container spacing={2} justifyContent={'space-between'}>
+
+                                                    <Grid item xl={3} lg={3} xs={12}>
+                                                        <Typography className='label'>Code Reader 3</Typography>
+                                                    </Grid>
+                                                    <Grid item xl={7} lg={7} sm={12} xs={12}>
+                                                        <FormControl fullWidth>
+                                                            <TextField variant='outlined' name='codereader3' value={values.codereader3} onChange={handleChange} InputProps={{
+                                                                endAdornment: (
+                                                                    <InputAdornment position="end">
+                                                                        <IconButton onClick={() => console.log('Scanning...')}
+                                                                            sx={{
+                                                                                backgroundColor: "#1976d2", // Highlighted color (MUI primary blue)
+                                                                                color: "#fff", // White icon color
+                                                                                borderRadius: "5px",
+                                                                                padding: "5px",
+                                                                                "&:hover": {
+                                                                                    backgroundColor: "#1565c0" // Darker shade on hover
+                                                                                }
+                                                                            }}
+                                                                        >
+                                                                            <QrCodeScannerIcon sx={{ fontSize: 25 }} />
+                                                                        </IconButton>
+                                                                    </InputAdornment>
+                                                                ),
+                                                            }} />
+                                                        </FormControl>
+                                                    </Grid>
+
+                                                </Grid>
+
+
+
+
+                                            </Grid>
+
+
+                                            <Grid item xl={6} lg={6}>
+
+                                                <Grid container spacing={2} justifyContent={'space-between'}>
+
+                                                    <Grid item xl={3} lg={3} xs={12}>
+                                                        <Typography className='label'>Code Reader 4</Typography>
+                                                    </Grid>
+                                                    <Grid item xl={7} lg={7} sm={12} xs={12}>
+                                                        <FormControl fullWidth>
+                                                            <TextField variant='outlined' name='codereader4' value={values.codereader4} onChange={handleChange} InputProps={{
+                                                                endAdornment: (
+                                                                    <InputAdornment position="end">
+                                                                        <IconButton onClick={() => console.log('Scanning...')}
+                                                                            sx={{
+                                                                                backgroundColor: "#1976d2", // Highlighted color (MUI primary blue)
+                                                                                color: "#fff", // White icon color
+                                                                                borderRadius: "5px",
+                                                                                padding: "5px",
+                                                                                "&:hover": {
+                                                                                    backgroundColor: "#1565c0" // Darker shade on hover
+                                                                                }
+                                                                            }}
+                                                                        >
+                                                                            <QrCodeScannerIcon sx={{ fontSize: 25 }} />
+                                                                        </IconButton>
+                                                                    </InputAdornment>
+                                                                ),
+                                                            }} />
+                                                        </FormControl>
+                                                    </Grid>
+
+                                                </Grid>
+
+
+
+
+                                            </Grid>
+                                            <Grid item xl={6} lg={6}>
+
+                                                <Grid container spacing={2} justifyContent={'space-between'}>
+
+                                                    <Grid item xl={3} lg={3} xs={12}>
+                                                        <Typography className='label'>Code Reader 5</Typography>
+                                                    </Grid>
+                                                    <Grid item xl={7} lg={7} sm={12} xs={12}>
+                                                        <FormControl fullWidth>
+                                                            <TextField variant='outlined' name='codereader5' value={values.codereader5} onChange={handleChange} InputProps={{
+                                                                endAdornment: (
+                                                                    <InputAdornment position="end">
+                                                                        <IconButton onClick={() => console.log('Scanning...')}
+                                                                            sx={{
+                                                                                backgroundColor: "#1976d2", // Highlighted color (MUI primary blue)
+                                                                                color: "#fff", // White icon color
+                                                                                borderRadius: "5px",
+                                                                                padding: "5px",
+                                                                                "&:hover": {
+                                                                                    backgroundColor: "#1565c0" // Darker shade on hover
+                                                                                }
+                                                                            }}
+                                                                        >
+                                                                            <QrCodeScannerIcon sx={{ fontSize: 25 }} />
+                                                                        </IconButton>
+                                                                    </InputAdornment>
+                                                                ),
+                                                            }} />
+                                                        </FormControl>
+                                                    </Grid>
+
+                                                </Grid>
+
+
+
+
+                                            </Grid>
+                                            <Grid item xs={12}>
+                                                <Grid container spacing={2}>
+                                                    <div className='border-top titletext1'></div>
+                                                </Grid>
+                                            </Grid>
+
+                                            {/* Parameters section start here  */}
+
+                                            <Grid item xl={6} lg={6}>
+
+                                                <Grid container spacing={2} justifyContent={'space-between'}>
+
+                                                    <Grid item xl={3} lg={3} xs={12}>
+                                                        <Typography className='label'>Program Number</Typography>
+                                                    </Grid>
+                                                    <Grid item xl={7} lg={7} sm={12} xs={12}>
+                                                        <FormControl fullWidth>
+                                                            <TextField variant='outlined' name='program_no' value={values.program_no} onChange={handleChange} />
+                                                        </FormControl>
+                                                    </Grid>
+
+                                                </Grid>
+
+                                            </Grid>
+
+
+
+                                            {/* Parameters section end here  */}
+
+                                            {/* Title 2  */}
+                                            <Grid item xs={12}>
+                                                <Grid container spacing={2}>
+                                                    <div className='border-top titletext2'></div>
+                                                </Grid>
+                                            </Grid>
+
+                                            {/* Stitches 1 start here  */}
+                                            <Grid item xl={6} lg={6}>
+
+                                                <Grid container spacing={2} justifyContent={'space-between'}>
+
+                                                    <Grid item xl={3} lg={3} xs={12}>
+                                                        <Typography>Stitching Types</Typography>
+                                                    </Grid>
+                                                    <Grid item xl={7} lg={7} sm={12} xs={12}>
+                                                        <FormControl fullWidth>
+
+
+                                                            <Select variant='outlined' defaultValue={'0'} name='section_seam_1' value={values.section_seam_1} onChange={handleChange}>
+                                                                <MenuItem value='0' disabled>Select</MenuItem>
+                                                                {/* <MenuItem value={'Free'}>Free</MenuItem> */}
+                                                                <MenuItem value={'Sab'}>Sab</MenuItem>
+                                                            </Select>
+
+                                                        </FormControl>
+                                                    </Grid>
+
+                                                    <Grid item xl={3} lg={3} xs={12}>
+                                                        <Typography>Thread Tension</Typography>
+                                                    </Grid>
+                                                    <Grid item xl={7} lg={7} sm={12} xs={12}>
+                                                        <FormControl fullWidth>
+                                                            <TextField variant='outlined' name='thread_tension' value={values.thread_tension} onChange={handleChange} />
+                                                        </FormControl>
+                                                    </Grid>
+
+                                                    <Grid item xl={3} lg={3} xs={12}>
+                                                        <Typography>Stiches Length</Typography>
+                                                    </Grid>
+                                                    <Grid item xl={7} lg={7} sm={12} xs={12}>
+                                                        <FormControl fullWidth>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                name='stiches_length'
+                                                                value={values.stiches_length}
+                                                                onChange={handleChange}
+                                                            />
+                                                        </FormControl>
+                                                    </Grid>
+
+                                                    <Grid item xl={3} lg={3} xs={12}>
+                                                        <Typography>Foot Pressure</Typography>
+                                                    </Grid>
+                                                    <Grid item xl={7} lg={7} sm={12} xs={12}>
+                                                        <FormControl fullWidth>
+                                                            <TextField
+                                                                variant='outlined'
+                                                                name='foot_pressure'
+                                                                value={values.foot_pressure}
+                                                                onChange={handleChange}
+                                                            />
+                                                        </FormControl>
+                                                    </Grid>
+                                                    <Grid item xl={3} lg={3} xs={12}>
+                                                        <Typography>No Of Stitches (MAX)</Typography>
+                                                    </Grid>
+                                                    <Grid item xl={7} lg={7} sm={12} xs={12}>
+                                                        <FormControl fullWidth>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                name='no_stitches_max1'
+                                                                value={values.no_stitches_max1}
+                                                                onChange={handleChange}
+                                                            />
+                                                        </FormControl>
+                                                    </Grid>
+
+                                                </Grid>
+
+
+
+                                            </Grid>
+
+                                            <Grid item xl={6} lg={6}>
+                                                <Grid container spacing={2} justifyContent={'space-between'}>
+
+                                                    <Grid item xl={3} lg={3} xs={12}>
+                                                        <Typography>Foot Height</Typography>
+                                                    </Grid>
+                                                    <Grid item xl={7} lg={7} sm={12} xs={12}>
+                                                        <FormControl fullWidth>
+                                                            <TextField variant='outlined'
+                                                                name='foot_height'
+                                                                type='number'
+                                                                value={values.foot_height}
+                                                                onChange={handleChange}
+                                                            />
+                                                        </FormControl>
+                                                    </Grid>
+
+                                                    <Grid item xl={3} lg={3} xs={12}>
+                                                        <Typography>Sewing Spped</Typography>
+                                                    </Grid>
+                                                    <Grid item xl={7} lg={7} sm={12} xs={12}>
+                                                        <FormControl fullWidth>
+                                                            <TextField variant='outlined'
+                                                                name='sewing_speed'
+                                                                value={values.sewing_speed}
+                                                                onChange={handleChange}
+                                                            />
+                                                        </FormControl>
+                                                    </Grid>
+
+                                                    <Grid item xl={3} lg={3} xs={12}>
+                                                        <Typography>Walking Foot Stoke</Typography>
+                                                    </Grid>
+                                                    <Grid item xl={7} lg={7} sm={12} xs={12}>
+                                                        <FormControl fullWidth>
+                                                            <TextField
+                                                                variant='outlined'
+                                                                name='walkimg_fot_stoke'
+                                                                value={values.walkimg_fot_stoke}
+                                                                onChange={handleChange}
+
+                                                            />
+                                                        </FormControl>
+                                                    </Grid>
+
+                                                    <Grid item xl={3} lg={3} xs={12}>
+                                                        <Typography>No Of Stitches</Typography>
+                                                    </Grid>
+                                                    <Grid item xl={7} lg={7} sm={12} xs={12}>
+                                                        <FormControl fullWidth>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                name='no_stitches1'
+                                                                value={values.no_stitches1}
+                                                                onChange={handleChange}
+                                                            />
+                                                        </FormControl>
+                                                    </Grid>
+
+                                                    <Grid item xl={3} lg={3} xs={12}>
+                                                        <Typography>No Of Stitches (MIN)</Typography>
+                                                    </Grid>
+                                                    <Grid item xl={7} lg={7} sm={12} xs={12}>
+                                                        <FormControl fullWidth>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                name='no_stitches_min1'
+                                                                value={values.no_stitches_min1}
+                                                                onChange={handleChange}
+                                                            />
+                                                        </FormControl>
+                                                    </Grid>
+
+
+
+
+                                                </Grid>
+                                            </Grid>
+
+
+
+
+
+                                            {/* Scan Data */}
+
+
+
+                                            {/* Submit Button  */}
+                                            <Grid item xl={12} lg={12} sm={12} display={'flex'} justifyContent={'end'} style={{ marginTop: `10px` }}>
+                                                <Grid container spacing={2} justifyContent={'end'} >
+                                                    <Grid item>
+                                                        {values._id ?
+                                                            <Button variant='contained' type='submit' color="success" onClick={handleUpdate} startIcon={<DoneIcon />}>Update</Button>
+                                                            : <Button variant='contained' type='submit' color="success" onClick={handlesubmit} startIcon={<DoneIcon />}>Submit</Button>
+                                                        }
+                                                    </Grid>
+                                                    <Grid item>
+                                                        <Button color='error' variant="contained" onClick={handlecancel} >cancel</Button>
+                                                    </Grid>
+
+                                                </Grid>
+                                            </Grid>
 
                                         </Grid>
-                                    </Grid>
+                                    </form>
 
+                                    {/* FORM END HERE  */}
+                                </CardContent>
+                            </Card>
 
-                                    {/* Title 1  */}
-                                    <Grid item xs={12}>
-                                        <Grid container spacing={2}>
-                                            <div className='border-top titletext1'></div>
-                                        </Grid>
-                                    </Grid>
+                        ) : (<>
 
-                                    {/* Parameters section start here  */}
-
-                                    <Grid item xl={6} lg={6}>
-
-                                        <Grid container spacing={2} justifyContent={'space-between'}>
-
-                                            <Grid item xl={3} lg={3} xs={12}>
-                                                <Typography className='label'>Program Number</Typography>
-                                            </Grid>
-                                            <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                                <FormControl fullWidth>
-                                                    <TextField variant='outlined' name='program_no' value={values.program_no} onChange={handleChange} />
-                                                </FormControl>
-                                            </Grid>
-
-                                        </Grid>
-
-                                    </Grid>
-
-
-
-                                    {/* Parameters section end here  */}
-
-                                    {/* Title 2  */}
-                                    <Grid item xs={12}>
-                                        <Grid container spacing={2}>
-                                            <div className='border-top titletext2'></div>
-                                        </Grid>
-                                    </Grid>
-
-                                    {/* Stitches 1 start here  */}
-                                    <Grid item xl={6} lg={6}>
-
-                                        <Grid container spacing={2} justifyContent={'space-between'}>
-
-                                            <Grid item xl={3} lg={3} xs={12}>
-                                                <Typography>Stitching Types</Typography>
-                                            </Grid>
-                                            <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                                <FormControl fullWidth>
-
-
-                                                    <Select variant='outlined' defaultValue={'0'} name='section_seam_1' value={values.section_seam_1} onChange={handleChange}>
-                                                        <MenuItem value='0' disabled>Select</MenuItem>
-                                                        {/* <MenuItem value={'Free'}>Free</MenuItem> */}
-                                                        <MenuItem value={'Sab'}>Sab</MenuItem>
-                                                    </Select>
-
-                                                </FormControl>
-                                            </Grid>
-
-                                            <Grid item xl={3} lg={3} xs={12}>
-                                                <Typography>Thread Tension</Typography>
-                                            </Grid>
-                                            <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                                <FormControl fullWidth>
-                                                    <TextField variant='outlined' name='thread_tension' value={values.thread_tension} onChange={handleChange} />
-                                                </FormControl>
-                                            </Grid>
-
-                                            <Grid item xl={3} lg={3} xs={12}>
-                                                <Typography>Stiches Length</Typography>
-                                            </Grid>
-                                            <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                                <FormControl fullWidth>
-                                                    <TextField
-                                                        variant="outlined"
-                                                        name='stiches_length'
-                                                        value={values.stiches_length}
-                                                        onChange={handleChange}
-                                                    />
-                                                </FormControl>
-                                            </Grid>
-
-                                            <Grid item xl={3} lg={3} xs={12}>
-                                                <Typography>Foot Pressure</Typography>
-                                            </Grid>
-                                            <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                                <FormControl fullWidth>
-                                                    <TextField
-                                                        variant='outlined'
-                                                        name='foot_pressure'
-                                                        value={values.foot_pressure}
-                                                        onChange={handleChange}
-                                                    />
-                                                </FormControl>
-                                            </Grid>
-                                            <Grid item xl={3} lg={3} xs={12}>
-                                                <Typography>No Of Stitches (MAX)</Typography>
-                                            </Grid>
-                                            <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                                <FormControl fullWidth>
-                                                    <TextField
-                                                        variant="outlined"
-                                                        name='no_stitches_max1'
-                                                        value={values.no_stitches_max1}
-                                                        onChange={handleChange}
-                                                    />
-                                                </FormControl>
-                                            </Grid>
-
-                                        </Grid>
-
-
-
-                                    </Grid>
-
-                                    <Grid item xl={6} lg={6}>
-                                        <Grid container spacing={2} justifyContent={'space-between'}>
-
-                                            <Grid item xl={3} lg={3} xs={12}>
-                                                <Typography>Foot Height</Typography>
-                                            </Grid>
-                                            <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                                <FormControl fullWidth>
-                                                    <TextField variant='outlined'
-                                                        name='foot_height'
-                                                        type='number'
-                                                        value={values.foot_height}
-                                                        onChange={handleChange}
-                                                    />
-                                                </FormControl>
-                                            </Grid>
-
-                                            <Grid item xl={3} lg={3} xs={12}>
-                                                <Typography>Sewing Spped</Typography>
-                                            </Grid>
-                                            <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                                <FormControl fullWidth>
-                                                    <TextField variant='outlined'
-                                                        name='sewing_speed'
-                                                        value={values.sewing_speed}
-                                                        onChange={handleChange}
-                                                    />
-                                                </FormControl>
-                                            </Grid>
-
-                                            <Grid item xl={3} lg={3} xs={12}>
-                                                <Typography>Walking Foot Stoke</Typography>
-                                            </Grid>
-                                            <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                                <FormControl fullWidth>
-                                                    <TextField
-                                                        variant='outlined'
-                                                        name='walkimg_fot_stoke'
-                                                        value={values.walkimg_fot_stoke}
-                                                        onChange={handleChange}
-
-                                                    />
-                                                </FormControl>
-                                            </Grid>
-
-                                            <Grid item xl={3} lg={3} xs={12}>
-                                                <Typography>No Of Stitches</Typography>
-                                            </Grid>
-                                            <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                                <FormControl fullWidth>
-                                                    <TextField
-                                                        variant="outlined"
-                                                        name='no_stitches1'
-                                                        value={values.no_stitches1}
-                                                        onChange={handleChange}
-                                                    />
-                                                </FormControl>
-                                            </Grid>
-
-                                            <Grid item xl={3} lg={3} xs={12}>
-                                                <Typography>No Of Stitches (MIN)</Typography>
-                                            </Grid>
-                                            <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                                <FormControl fullWidth>
-                                                    <TextField
-                                                        variant="outlined"
-                                                        name='no_stitches_min1'
-                                                        value={values.no_stitches_min1}
-                                                        onChange={handleChange}
-                                                    />
-                                                </FormControl>
-                                            </Grid>
-
-
-
-
-                                        </Grid>
-                                    </Grid>
-
-                                    <Grid item xs={12}>
-                                        <Grid container spacing={2}>
-                                            <div className='border-top titletext5'></div>
-                                        </Grid>
-                                    </Grid>
-                                    {/* Code Start */}
-
-
-                                    <Grid item xl={6} lg={6}>
-
-                                        <Grid container spacing={2} justifyContent={'space-between'}>
-
-                                            <Grid item xl={3} lg={3} xs={12}>
-                                                <Typography className='label'>Artical Code</Typography>
-                                            </Grid>
-                                            <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                                <FormControl fullWidth>
-                                                    <TextField variant='outlined' name='article_code' value={values.article_code} onChange={handleChange} />
-                                                </FormControl>
-                                            </Grid>
-
-                                        </Grid>
-
-
-
-
-                                    </Grid>
-
-                                    <Grid item xl={6} lg={6}>
-
-                                        <Grid container spacing={2} justifyContent={'space-between'}>
-
-                                            <Grid item xl={3} lg={3} xs={12}>
-                                                <Typography className='label'>Code Reader 1</Typography>
-                                            </Grid>
-                                            <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                                <FormControl fullWidth>
-                                                    <TextField variant='outlined' name='codereader1' value={values.codereader1} onChange={handleChange} />
-                                                </FormControl>
-                                            </Grid>
-
-                                        </Grid>
-
-
-
-
-                                    </Grid>
-
-                                    <Grid item xl={6} lg={6}>
-
-                                        <Grid container spacing={2} justifyContent={'space-between'}>
-
-                                            <Grid item xl={3} lg={3} xs={12}>
-                                                <Typography className='label'>Code Reder 2</Typography>
-                                            </Grid>
-                                            <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                                <FormControl fullWidth>
-                                                    <TextField variant='outlined' name='codereader2' value={values.codereader2} onChange={handleChange} />
-                                                </FormControl>
-                                            </Grid>
-
-                                        </Grid>
-
-
-
-
-                                    </Grid>
-
-                                    <Grid item xl={6} lg={6}>
-
-                                        <Grid container spacing={2} justifyContent={'space-between'}>
-
-                                            <Grid item xl={3} lg={3} xs={12}>
-                                                <Typography className='label'>Code Reader 3</Typography>
-                                            </Grid>
-                                            <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                                <FormControl fullWidth>
-                                                    <TextField variant='outlined' name='codereader3' value={values.codereader3} onChange={handleChange} />
-                                                </FormControl>
-                                            </Grid>
-
-                                        </Grid>
-
-
-
-
-                                    </Grid>
-
-
-                                    <Grid item xl={6} lg={6}>
-
-                                        <Grid container spacing={2} justifyContent={'space-between'}>
-
-                                            <Grid item xl={3} lg={3} xs={12}>
-                                                <Typography className='label'>Code Reader 4</Typography>
-                                            </Grid>
-                                            <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                                <FormControl fullWidth>
-                                                    <TextField variant='outlined' name='codereader4' value={values.codereader4} onChange={handleChange} />
-                                                </FormControl>
-                                            </Grid>
-
-                                        </Grid>
-
-
-
-
-                                    </Grid>
-                                    <Grid item xl={6} lg={6}>
-
-                                        <Grid container spacing={2} justifyContent={'space-between'}>
-
-                                            <Grid item xl={3} lg={3} xs={12}>
-                                                <Typography className='label'>Code Reader 5</Typography>
-                                            </Grid>
-                                            <Grid item xl={7} lg={7} sm={12} xs={12}>
-                                                <FormControl fullWidth>
-                                                    <TextField variant='outlined' name='codereader5' value={values.codereader5} onChange={handleChange} />
-                                                </FormControl>
-                                            </Grid>
-
-                                        </Grid>
-
-
-
-
-                                    </Grid>
-
-                                    {/* Scan Data */}
-
-
-
-                                    {/* Submit Button  */}
-                                    <Grid item xl={12} lg={12} sm={12} display={'flex'} justifyContent={'end'} style={{ marginTop: `10px` }}>
-                                        <Grid container spacing={2} justifyContent={'end'} >
-                                            <Grid item>
-                                                {values._id ?
-                                                    <Button variant='contained' type='submit' color="success" onClick={handleUpdate} startIcon={<DoneIcon />}>Update</Button>
-                                                    : <Button variant='contained' type='submit' color="success" onClick={handlesubmit} startIcon={<DoneIcon />}>Submit</Button>
-                                                }
-                                            </Grid>
-                                            <Grid item>
-                                                <Button color='error' variant="contained" onClick={handlecancel} >cancel</Button>
-                                            </Grid>
-
-                                        </Grid>
-                                    </Grid>
-
-                                </Grid>
-                            </form>
-
-                            {/* FORM END HERE  */}
-                        </CardContent>
-                    </Card>
-
-                ) : (<>
-
-                    <ThemeProvider theme={tableTheme} >
-                        <Box sx={{ width: 1 }} marginTop={'1%'}>
-                            <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
-                                {/* <Box gridColumn="span 12">
+                            <ThemeProvider theme={tableTheme} >
+                                <Box sx={{ width: 1 }} marginTop={'1%'}>
+                                    <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
+                                        {/* <Box gridColumn="span 12">
                                 <MaterialReactTable
                                     columns={Articlecolumns}
                                     data={data}
@@ -840,22 +982,28 @@ const UserRegistration = () => {
                                             {/* <Button variant="contained" startIcon={<PhotoCamera />}>
                                 User Photo
                             </Button> */}
-                                {/* </>
+                                        {/* </>
                                     )}
                                 />
                             </Box> */}
-                                <Box gridColumn="span 12">
-                                    <ArticlesTable data={articledata} />
+                                        <Box gridColumn="span 12">
+                                            <ArticlesTable data={articledata} />
+                                        </Box>
+                                        <Box gridColumn="span 12">
+                                            <UsersTable data={userData} />
+                                        </Box>
+                                    </Box>
                                 </Box>
-                                <Box gridColumn="span 12">
-                                    <UsersTable data={userData} />
-                                </Box>
-                            </Box>
-                        </Box>
-                    </ThemeProvider>
-                </>)
-                }
-            </>)}
+                            </ThemeProvider>
+                        </>)
+                        }
+                    </Paper>
+                </Box >
+            </>
+            )
+            }
+
+
         </div >
     )
 }

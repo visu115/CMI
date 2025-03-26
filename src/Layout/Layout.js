@@ -133,6 +133,7 @@ export default function Nav() {
         // { name: 'Registered User', path: '/registerTable', icon: <BackupTableIcon /> },
         // { name: 'User Login', path: '/login', icon: <LoginIcon /> },
         { name: 'Check Scanner', path: '/checkScanner', icon: <QrCodeScannerIcon /> },
+        { name: 'Report', path: '/report', icon: <HowToRegIcon /> },
         { name: 'Alarm Scanner', path: '/alram_table', icon: <StorageIcon /> },
         // { name: 'Thread Database', path: '/threadDatabase', icon: <StorageIcon /> },
         // { name: 'View Coil Database', path: '/viewCoilDatabase', icon: <StorageIcon /> },
@@ -141,6 +142,8 @@ export default function Nav() {
     ];
     const Admin_route = [
         { name: 'Registration', path: '/register', icon: <HowToRegIcon /> },
+        { name: 'Report', path: '/report', icon: <HowToRegIcon /> },
+
     ]
     const routes = admin_access === 'Maintenance' ? Admin_route : user_routes
     return (
